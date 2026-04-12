@@ -1,0 +1,1 @@
+export { default } from "C:/Users/Yves/Desktop/Project0/recruitt/node_modules/.pnpm/@nuxt-themes+elements@0.9.5_magicast@0.5.2_postcss@8.5.9_vue@3.5.32_typescript@5.9.2_/node_modules/@nuxt-themes/elements/components/globals/NuxtImg.vue"
