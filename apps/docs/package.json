@@ -13,10 +13,9 @@
     "@nuxt-themes/docus": "^1.15.1",
     "@nuxt/icon": "^2.2.1",
     "@nuxt/image": "^2.0.0",
-    "@nuxt/ui": "^4.6.1",
     "@nuxthq/studio": "^2.2.1",
-    "@nuxtjs/tailwindcss": "^6.14.0",
-    "nuxt": "^3.13.2"
+    "nuxt": "^3.13.2",
+    "pinceau": "^0.18.10"
   },
   "devDependencies": {
     "typescript": "latest"
