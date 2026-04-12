@@ -17,6 +17,13 @@ export default defineAppConfig({
     },
     footer: {
       iconLinks: []
+    },
+    github: {
+      dir: 'apps/docs/content',
+      branch: 'main',
+      repo: 'recruitt',
+      owner: 'Yves-Developer',
+      edit: true
     }
   }
 })
