@@ -24,6 +24,8 @@ export default defineAppConfig({
       repo: 'recruitt',
       owner: 'Yves-Developer',
       edit: true
-    }
-  }
+    },
+    primary: '#a8fc1e'
+  },
+
 })
