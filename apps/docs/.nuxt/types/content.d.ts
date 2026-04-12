@@ -1,4 +1,0 @@
-declare module '#content/server' {
-  const serverQueryContent: typeof import('C:/Users/Yves/Desktop/Project0/recruitt/node_modules/.pnpm/@nuxt+content@2.13.4_db0@0.3.4_ioredis@5.10.1_magicast@0.5.2_nuxt@4.4.2_@babel+core@7.29.0_@b_novdd57ebcljgswbgzsxdmb3uy/node_modules/@nuxt/content/dist/runtime/legacy/types').serverQueryContent
-  const parseContent: typeof import('C:/Users/Yves/Desktop/Project0/recruitt/node_modules/.pnpm/@nuxt+content@2.13.4_db0@0.3.4_ioredis@5.10.1_magicast@0.5.2_nuxt@4.4.2_@babel+core@7.29.0_@b_novdd57ebcljgswbgzsxdmb3uy/node_modules/@nuxt/content/dist/runtime/server').parseContent
-}
