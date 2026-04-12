@@ -3,17 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "nuxi dev",
+    "dev": "nuxi dev --port 3001",
     "build": "nuxi build",
     "generate": "nuxi generate",
     "preview": "nuxi preview",
     "postinstall": "nuxi prepare"
   },
   "dependencies": {
-    "@nuxt-themes/docus": "latest",
-    "nuxt": "latest"
+    "@nuxt-themes/docus": "^1.15.1",
+    "@nuxt/icon": "^2.2.1",
+    "@nuxt/image": "^2.0.0",
+    "@nuxt/ui": "^4.6.1",
+    "@nuxthq/studio": "^2.2.1",
+    "@nuxtjs/tailwindcss": "^6.14.0",
+    "nuxt": "^3.13.2"
   },
   "devDependencies": {
-    "typescript": "5.9.2"
+    "typescript": "latest"
   }
 }
