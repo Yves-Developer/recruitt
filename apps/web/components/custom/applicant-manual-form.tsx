@@ -66,7 +66,7 @@ export function ApplicantManualForm() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="w-full">
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         {/* Personal Info */}
         <Card>

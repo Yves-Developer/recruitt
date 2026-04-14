@@ -127,15 +127,15 @@ const chartData = [
 ]
 
 const chartConfig = {
-  applicants: {
-    label: "Applicants",
+  visitors: {
+    label: "Visitors",
   },
   desktop: {
-    label: "Direct Applications",
+    label: "Desktop",
     color: "var(--primary)",
   },
   mobile: {
-    label: "Umurava Platform",
+    label: "Mobile",
     color: "var(--primary)",
   },
 } satisfies ChartConfig
@@ -167,10 +167,10 @@ export function ChartAreaInteractive() {
   return (
     <Card className="@container/card">
       <CardHeader>
-        <CardTitle>Applicant Influx</CardTitle>
+        <CardTitle>Total Visitors</CardTitle>
         <CardDescription>
           <span className="hidden @[540px]/card:block">
-            New candidate profiles captured over the last 3 months
+            Total for the last 3 months
           </span>
           <span className="@[540px]/card:hidden">Last 3 months</span>
         </CardDescription>

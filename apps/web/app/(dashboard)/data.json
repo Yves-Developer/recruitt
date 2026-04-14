@@ -1,58 +1,42 @@
 [
   {
     "id": 1,
-    "candidate": "Alex Rivera",
-    "jobRole": "Senior Fullstack Engineer",
+    "candidate": "Alex Johnson",
+    "jobRole": "Senior Frontend Engineer",
     "matchScore": "94%",
     "status": "Qualified",
-    "date": "2024-04-12"
+    "date": "2024-03-25"
   },
   {
     "id": 2,
-    "candidate": "Sarah Chen",
-    "jobRole": "AI Product Manager",
+    "candidate": "Sarah Miller",
+    "jobRole": "Product Designer",
     "matchScore": "88%",
     "status": "Interview",
-    "date": "2024-04-11"
+    "date": "2024-03-24"
   },
   {
     "id": 3,
-    "candidate": "Jordan Smith",
-    "jobRole": "Senior Fullstack Engineer",
+    "candidate": "Michael Chen",
+    "jobRole": "Fullstack Developer",
     "matchScore": "72%",
-    "status": "Under Review",
-    "date": "2024-04-10"
+    "status": "In Review",
+    "date": "2024-03-23"
   },
   {
     "id": 4,
-    "candidate": "Emily Whalen",
-    "jobRole": "UX Designer",
+    "candidate": "Emily Davis",
+    "jobRole": "DevOps Engineer",
     "matchScore": "91%",
     "status": "Qualified",
-    "date": "2024-04-09"
+    "date": "2024-03-22"
   },
   {
     "id": 5,
-    "candidate": "Michael Ross",
-    "jobRole": "Marketing Lead",
-    "matchScore": "85%",
-    "status": "Interview",
-    "date": "2024-04-08"
-  },
-  {
-    "id": 6,
-    "candidate": "Jessica Pearson",
-    "jobRole": "Senior Fullstack Engineer",
-    "matchScore": "96%",
-    "status": "Qualified",
-    "date": "2024-04-07"
-  },
-  {
-    "id": 7,
-    "candidate": "Louis Litt",
-    "jobRole": "Legal Counsel",
-    "matchScore": "79%",
-    "status": "Rejected",
-    "date": "2024-04-06"
+    "candidate": "James Wilson",
+    "jobRole": "Marketing Specialist",
+    "matchScore": "65%",
+    "status": "In Review",
+    "date": "2024-03-21"
   }
 ]

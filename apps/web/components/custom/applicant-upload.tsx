@@ -50,7 +50,7 @@ export function ApplicantUpload() {
   }
 
   return (
-    <Card className="max-w-2xl mx-auto border-dashed border-2">
+    <Card className="w-full border-dashed border-2 bg-card/50">
       <CardHeader>
         <CardTitle>AI Resume Parser</CardTitle>
         <CardDescription>
