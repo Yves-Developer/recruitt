@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "candidate": "Alex Rivera",
+    "jobRole": "Senior Fullstack Engineer",
+    "matchScore": "94%",
+    "status": "Qualified",
+    "date": "2024-04-12"
+  },
+  {
+    "id": 2,
+    "candidate": "Sarah Chen",
+    "jobRole": "AI Product Manager",
+    "matchScore": "88%",
+    "status": "Interview",
+    "date": "2024-04-11"
+  },
+  {
+    "id": 3,
+    "candidate": "Jordan Smith",
+    "jobRole": "Senior Fullstack Engineer",
+    "matchScore": "72%",
+    "status": "Under Review",
+    "date": "2024-04-10"
+  },
+  {
+    "id": 4,
+    "candidate": "Emily Whalen",
+    "jobRole": "UX Designer",
+    "matchScore": "91%",
+    "status": "Qualified",
+    "date": "2024-04-09"
+  },
+  {
+    "id": 5,
+    "candidate": "Michael Ross",
+    "jobRole": "Marketing Lead",
+    "matchScore": "85%",
+    "status": "Interview",
+    "date": "2024-04-08"
+  },
+  {
+    "id": 6,
+    "candidate": "Jessica Pearson",
+    "jobRole": "Senior Fullstack Engineer",
+    "matchScore": "96%",
+    "status": "Qualified",
+    "date": "2024-04-07"
+  },
+  {
+    "id": 7,
+    "candidate": "Louis Litt",
+    "jobRole": "Legal Counsel",
+    "matchScore": "79%",
+    "status": "Rejected",
+    "date": "2024-04-06"
+  }
+]
