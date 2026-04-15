@@ -74,6 +74,7 @@ const ApplicantSchema: Schema = new Schema(
     },
     jobId: { type: Schema.Types.ObjectId, ref: "Job", required: true },
     resumeUrl: { type: String },
+    source: { type: String, enum: ["umurava", "external"], default: "external" },
   },
   { timestamps: true }
 );

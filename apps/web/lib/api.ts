@@ -87,4 +87,11 @@ export const api = {
     if (!res.ok) throw new Error('Failed to update screening status');
     return res.json();
   },
+
+  // Stats
+  async getStats(): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/stats`);
+    if (!res.ok) throw new Error('Failed to fetch dashboard stats');
+    return res.json();
+  },
 };

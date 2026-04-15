@@ -176,7 +176,7 @@ export function TalentDetailsSheet({ applicant, open, onOpenChange }: TalentDeta
                 <div>
                   <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-3">Certificates</h4>
                   <div className="flex flex-wrap gap-4">
-                    {applicant.certifications.map((c, i) => (
+                    {applicant.certifications?.map((c, i) => (
                       <span key={i} className="text-sm font-medium">{c.name}</span>
                     ))}
                   </div>

@@ -211,7 +211,7 @@ export default function ScreeningPage() {
                         <Slider 
                           value={[weights.skills]} 
                           max={100} step={5} 
-                          onValueChange={([v]) => setWeights(prev => ({ ...prev, skills: v }))} 
+                          onValueChange={([v]) => setWeights(prev => ({ ...prev, skills: v ?? 0 }))} 
                         />
                       </div>
                       <div className="space-y-3">
@@ -222,7 +222,7 @@ export default function ScreeningPage() {
                         <Slider 
                           value={[weights.experience]} 
                           max={100} step={5} 
-                          onValueChange={([v]) => setWeights(prev => ({ ...prev, experience: v }))} 
+                          onValueChange={([v]) => setWeights(prev => ({ ...prev, experience: v ?? 0 }))} 
                         />
                       </div>
                       <div className="space-y-3">
@@ -233,7 +233,7 @@ export default function ScreeningPage() {
                         <Slider 
                           value={[weights.education]} 
                           max={100} step={5} 
-                          onValueChange={([v]) => setWeights(prev => ({ ...prev, education: v }))} 
+                          onValueChange={([v]) => setWeights(prev => ({ ...prev, education: v ?? 0 }))} 
                         />
                       </div>
                       <div className="space-y-3">
@@ -244,7 +244,7 @@ export default function ScreeningPage() {
                         <Slider 
                           value={[weights.projects]} 
                           max={100} step={5} 
-                          onValueChange={([v]) => setWeights(prev => ({ ...prev, projects: v }))} 
+                          onValueChange={([v]) => setWeights(prev => ({ ...prev, projects: v ?? 0 }))} 
                         />
                       </div>
                     </div>

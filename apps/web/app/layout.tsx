@@ -6,6 +6,7 @@ import { ThemeToggle } from "../components/theme-toggle";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
+import { AuthProvider } from "@/components/providers/auth-provider";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -33,10 +34,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <TooltipProvider>
-            <main>{children}</main>
-            <Toaster position="top-center" richColors />
-          </TooltipProvider>
+          <AuthProvider>
+            <TooltipProvider>
+              <main>{children}</main>
+              <Toaster position="top-center" richColors />
+            </TooltipProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

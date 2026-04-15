@@ -28,6 +28,7 @@ import { toast } from "sonner"
 const jobSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters long"),
   description: z.string().min(10, "Description must be at least 10 characters"),
+  location: z.string().min(2, "Location is required"),
   requirements: z.string().min(1, "At least one requirement is required"),
   skills: z.string().min(1, "At least one skill is required"),
 })
@@ -48,6 +49,7 @@ export function CreateJobDialog({ onSuccess }: CreateJobDialogProps) {
     defaultValues: {
       title: "",
       description: "",
+      location: "",
       requirements: "",
       skills: "",
     },
@@ -60,12 +62,13 @@ export function CreateJobDialog({ onSuccess }: CreateJobDialogProps) {
       const payload = {
         title: data.title,
         description: data.description,
+        location: data.location,
         requirements: data.requirements.split("\n").filter(r => r.trim() !== ""),
         skills: data.skills.split(",").map(s => s.trim()).filter(s => s !== ""),
         status: "open" as const
       }
 
-      await api.createJob(payload)
+      await api.createJob(payload as any)
       
       toast.success("Job opening created successfully!")
       setOpen(false)
@@ -94,17 +97,31 @@ export function CreateJobDialog({ onSuccess }: CreateJobDialogProps) {
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
-          <Field>
-            <FieldLabel htmlFor="title">Job Title</FieldLabel>
-            <FieldContent>
-              <Input
-                id="title"
-                placeholder="e.g. Senior Frontend Engineer"
-                {...form.register("title")}
-              />
-              <FieldError>{form.formState.errors.title?.message}</FieldError>
-            </FieldContent>
-          </Field>
+          <div className="grid grid-cols-2 gap-4">
+            <Field>
+              <FieldLabel htmlFor="title">Job Title</FieldLabel>
+              <FieldContent>
+                <Input
+                  id="title"
+                  placeholder="e.g. Senior Frontend Engineer"
+                  {...form.register("title")}
+                />
+                <FieldError>{form.formState.errors.title?.message}</FieldError>
+              </FieldContent>
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="location">Location</FieldLabel>
+              <FieldContent>
+                <Input
+                  id="location"
+                  placeholder="e.g. Remote / Kigali"
+                  {...form.register("location")}
+                />
+                <FieldError>{form.formState.errors.location?.message}</FieldError>
+              </FieldContent>
+            </Field>
+          </div>
           
           <Field>
             <FieldLabel htmlFor="description">Description</FieldLabel>

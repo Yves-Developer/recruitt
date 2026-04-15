@@ -23,17 +23,17 @@ export default function ApplicantsPage() {
   const [isLoading, setIsLoading] = React.useState(true)
 
   React.useEffect(() => {
-    const fetchJobs = async () => {
+    const initData = async () => {
       try {
-        const data = await api.getJobs()
-        setJobs(data)
+        const jobsData = await api.getJobs()
+        setJobs(jobsData)
       } catch (error) {
-        toast.error("Failed to fetch jobs")
+        toast.error("Failed to load jobs")
       } finally {
         setIsLoading(false)
       }
     }
-    fetchJobs()
+    initData()
   }, [])
 
   const [pool, setPool] = React.useState<Applicant[]>([])
@@ -84,14 +84,14 @@ export default function ApplicantsPage() {
         </div>
       </div>
 
-      <Tabs defaultValue="upload" orientation="vertical" className="flex flex-col md:flex-row gap-8 lg:gap-12 w-full">
+      <Tabs defaultValue="pool" orientation="vertical" className="flex flex-col md:flex-row gap-8 lg:gap-12 w-full">
 
         {/* Left Column: Context & Navigation */}
         <div className="w-full md:w-72 lg:w-80 shrink-0 space-y-8">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Talent Ingestion</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Talent Hub</h1>
             <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
-              Manage your candidate pipeline. Add new profiles or review the current talent pool for this opening.
+              Orchestrate your applicant pipeline and review candidate profiles.
             </p>
           </div>
 
@@ -101,8 +101,9 @@ export default function ApplicantsPage() {
               disabled={!jobId}
               className="justify-start gap-3 h-14 px-4 shadow-none bg-accent/30 data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:border-primary/30 border border-transparent rounded-xl transition-all text-base disabled:opacity-50"
             >
-              <IconUsers size={22} className="text-primary" /> Active Talent Pool
+              <IconUsers size={22} className="text-primary" /> Job Talent Pool
             </TabsTrigger>
+            <div className="h-px bg-border/50 my-2 mx-1" />
             <TabsTrigger
               value="upload"
               disabled={!jobId}
@@ -121,7 +122,7 @@ export default function ApplicantsPage() {
           
           {!jobId && (
             <p className="text-xs text-amber-500 font-medium animate-pulse">
-              * Please select a job opening above to enable ingestion.
+              * Select a job opening above to enable specific tools.
             </p>
           )}
         </div>

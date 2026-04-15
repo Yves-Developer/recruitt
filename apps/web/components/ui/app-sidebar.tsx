@@ -40,102 +40,43 @@ import { NavSecondary } from "./nav-secondary"
 import { NavManagement } from "./nav-management"
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   navMain: [
     {
-      title: "Dashboard",
+      title: "Command Center",
       url: "/",
       icon: IconDashboard,
     },
     {
-      title: "Job Openings",
+      title: "Job Workspace",
       url: "/jobs",
       icon: IconListDetails,
     },
     {
-      title: "Applicants",
+      title: "Talent Hub",
       url: "/applicants",
       icon: IconUsers,
     },
     {
-      title: "AI Matrix",
+      title: "AI Screening Matrix",
       url: "/screening",
       icon: IconSparkles,
     },
-  ],
-  navManagement: [
     {
-      title: "Talent Pools",
-      icon: IconFolder,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Senior Engineering",
-          url: "#",
-        },
-        {
-          title: "Product & Design",
-          url: "#",
-        },
-        {
-          title: "Marketing Lead",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Active Campaigns",
-      icon: IconTimeline,
-      url: "#",
-      items: [
-        {
-          title: "Q2 Growth Hire",
-          url: "#",
-        },
-        {
-          title: "Technical Sourcing",
-          url: "#",
-        },
-      ],
+      title: "Screening History",
+      url: "/history",
+      icon: IconHistory,
     },
   ],
   navSecondary: [
     {
-      title: "Prompt Library",
-      url: "#",
-      icon: IconBulb,
-    },
-    {
       title: "Settings",
-      url: "#",
+      url: "/",
       icon: IconSettings,
     },
     {
-      title: "Help Center",
-      url: "#",
+      title: "Help & Support",
+      url: "/",
       icon: IconHelp,
-    },
-  ],
-  reports: [
-    {
-      name: "Pipeline Analytics",
-      url: "#",
-      icon: IconReportAnalytics,
-    },
-    {
-      name: "AI Benchmarks",
-      url: "#",
-      icon: IconTrophy,
-    },
-    {
-      name: "Screening History",
-      url: "#",
-      icon: IconHistory,
     },
   ],
 }
@@ -160,12 +101,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavManagement items={data.navManagement} />
-        <NavDocuments items={data.reports} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   )

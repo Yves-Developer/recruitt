@@ -33,7 +33,7 @@ const manualApplicantSchema = z.object({
     company: z.string().min(1, "Company is required"),
     description: z.string().min(1, "Description is required"),
     startDate: z.string().min(1, "Start date is required"),
-    isCurrent: z.boolean().default(false),
+    isCurrent: z.boolean(),
   })).min(1, "Add at least one experience"),
   education: z.array(z.object({
     institution: z.string().min(1, "Institution is required"),
@@ -252,7 +252,7 @@ export function ApplicantManualForm({ jobId, onSuccess }: ApplicantManualFormPro
               type="button" 
               variant="outline" 
               className="w-full border-dashed"
-              onClick={() => expAppend({ role: "", company: "", description: "", startDate: "" })}
+              onClick={() => expAppend({ role: "", company: "", description: "", startDate: "", isCurrent: false })}
               disabled={isSubmitting}
             >
               <IconPlus size={16} className="mr-2" /> Add Experience Row
