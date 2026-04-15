@@ -3,9 +3,12 @@ import { Outfit, Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "../components/theme-provider";
 import { ThemeToggle } from "../components/theme-toggle";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { Toaster } from "sonner";
+import { AuthProvider } from "@/components/providers/auth-provider";
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -31,12 +34,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="relative min-h-screen">
-            <header className="absolute right-4 top-4 z-50">
-              <ThemeToggle />
-            </header>
-            <main>{children}</main>
-          </div>
+          <AuthProvider>
+            <TooltipProvider>
+              <main>{children}</main>
+              <Toaster position="top-center" richColors />
+            </TooltipProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

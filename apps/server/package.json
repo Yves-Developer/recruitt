@@ -8,19 +8,22 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "lint": "eslint src/**",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "seed": "tsx src/scripts/seed.ts"
   },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
     "@repo/shared": "workspace:*",
     "cors": "^2.8.5",
+    "csv-parse": "^6.2.1",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "helmet": "^7.1.0",
     "mongoose": "^8.4.1",
     "morgan": "^1.10.0",
     "multer": "^2.1.1",
-    "pdf-parse": "^2.4.5",
+    "pdf-parse-fork": "^1.2.0",
+    "xlsx": "^0.18.5",
     "zod": "^4.3.6"
   },
   "devDependencies": {

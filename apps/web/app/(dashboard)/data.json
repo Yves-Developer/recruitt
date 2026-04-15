@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "candidate": "Alex Johnson",
+    "jobRole": "Senior Frontend Engineer",
+    "matchScore": "94%",
+    "status": "Qualified",
+    "date": "2024-03-25"
+  },
+  {
+    "id": 2,
+    "candidate": "Sarah Miller",
+    "jobRole": "Product Designer",
+    "matchScore": "88%",
+    "status": "Interview",
+    "date": "2024-03-24"
+  },
+  {
+    "id": 3,
+    "candidate": "Michael Chen",
+    "jobRole": "Fullstack Developer",
+    "matchScore": "72%",
+    "status": "In Review",
+    "date": "2024-03-23"
+  },
+  {
+    "id": 4,
+    "candidate": "Emily Davis",
+    "jobRole": "DevOps Engineer",
+    "matchScore": "91%",
+    "status": "Qualified",
+    "date": "2024-03-22"
+  },
+  {
+    "id": 5,
+    "candidate": "James Wilson",
+    "jobRole": "Marketing Specialist",
+    "matchScore": "65%",
+    "status": "In Review",
+    "date": "2024-03-21"
+  }
+]

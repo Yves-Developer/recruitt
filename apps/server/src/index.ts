@@ -1,15 +1,16 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
-import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
 import { errorHandler, notFound } from "./middlewares/errorHandler.js";
 import jobRoutes from "./routes/job.routes.js";
 import applicantRoutes from "./routes/applicant.routes.js";
 import screeningRoutes from "./routes/screening.routes.js";
-
-dotenv.config();
+import statsRoutes from "./routes/stats.routes.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -31,6 +32,7 @@ app.get("/health", (req, res) => {
 app.use("/api/jobs", jobRoutes);
 app.use("/api/applicants", applicantRoutes);
 app.use("/api/screening", screeningRoutes);
+app.use("/api/stats", statsRoutes);
 
 // Error Handling Middlewares
 app.use(notFound);
