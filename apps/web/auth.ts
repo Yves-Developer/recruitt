@@ -8,20 +8,7 @@ const { handlers: nextHandlers, auth: nextAuth, signIn: nextSignIn, signOut: nex
       clientSecret: process.env.AUTH_GOOGLE_SECRET,
     }),
   ],
-  callbacks: {
-    authorized({ auth: session, request: { nextUrl } }) {
-      const isLoggedIn = !!session?.user
-      const isOnDashboard = nextUrl.pathname.startsWith("/") && nextUrl.pathname !== "/login"
-      
-      if (isOnDashboard) {
-        if (isLoggedIn) return true
-        return false 
-      } else if (isLoggedIn) {
-        return Response.redirect(new URL("/", nextUrl))
-      }
-      return true
-    },
-  },
+  session: { strategy: "jwt" },
   pages: {
     signIn: "/login",
   },
