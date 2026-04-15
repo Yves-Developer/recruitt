@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 import { ScreeningResult as IScreeningResult } from "@repo/shared";
 
-export interface ScreeningResultDocument extends Omit<IScreeningResult, "id" | "jobId" | "applicantId">, Document {
+export interface ScreeningResultDocument extends Omit<IScreeningResult, "id" | "_id" | "jobId" | "applicantId">, Document {
   jobId: mongoose.Types.ObjectId;
   applicantId: mongoose.Types.ObjectId;
 }

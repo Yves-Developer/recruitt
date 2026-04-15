@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 import { Applicant as IApplicant } from "@repo/shared";
 
-export interface ApplicantDocument extends Omit<IApplicant, "id">, Document {}
+export interface ApplicantDocument extends Omit<IApplicant, "id" | "_id">, Document {}
 
 const ApplicantSchema: Schema = new Schema(
   {
