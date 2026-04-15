@@ -89,7 +89,7 @@ export const ingestStructuredApplicant = async (req: Request, res: Response) => 
     });
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      res.status(400).json({ message: "Validation error", errors: error.errors });
+      res.status(400).json({ message: "Validation error", errors: error.issues });
     } else if (error.code === 11000) {
       res.status(409).json({ message: "One or more applicants already applied for this job (duplicate email)." });
     } else {

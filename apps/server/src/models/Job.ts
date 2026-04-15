@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 import { Job as IJob } from "@repo/shared";
 
-export interface JobDocument extends Omit<IJob, "id">, Document {}
+export interface JobDocument extends Omit<IJob, "id" | "_id">, Document {}
 
 const JobSchema: Schema = new Schema(
   {
