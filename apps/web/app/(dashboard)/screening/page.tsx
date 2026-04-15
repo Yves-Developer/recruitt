@@ -10,10 +10,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { IconBrain, IconCpu, IconRocket, IconLoader2, IconSparkles, IconArrowLeft, IconCommand } from "@tabler/icons-react"
+import { IconBrain, IconRocket, IconSparkles, IconArrowLeft, IconCommand } from "@tabler/icons-react"
 import { Progress } from "@/components/ui/progress"
 import { toast } from "sonner"
 import { Badge } from "@/components/ui/badge"
+import { Slider } from "@/components/ui/slider"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Leaderboard } from "@/components/custom/leaderboard"
 import { api } from "@/lib/api"
 import { Job, ScreeningResult } from "@repo/shared"
@@ -27,6 +29,15 @@ export default function ScreeningPage() {
   const [showResults, setShowResults] = React.useState(false)
   const [progress, setProgress] = React.useState(0)
   const [step, setStep] = React.useState(0)
+  const [hasPreviousResults, setHasPreviousResults] = React.useState(false)
+  
+  // Scoring Criteria Weights
+  const [weights, setWeights] = React.useState({
+    skills: 40,
+    experience: 30,
+    education: 20,
+    projects: 10
+  })
 
   const steps = [
     "Fetching applicant profiles...",
@@ -49,8 +60,6 @@ export default function ScreeningPage() {
     }
     fetchJobs()
   }, [])
-
-  const [hasPreviousResults, setHasPreviousResults] = React.useState(false)
 
   React.useEffect(() => {
     const checkPrevious = async () => {
@@ -91,19 +100,18 @@ export default function ScreeningPage() {
     setStep(0)
     setProgress(0)
 
-    // Parallel simulation of progress while waiting for backend
     const interval = setInterval(() => {
       setProgress((prev) => {
         const next = prev + 1
         if (next % 20 === 0 && next < 100) {
           setStep((s) => s + 1)
         }
-        return next > 95 ? 95 : next // Hold at 95 until real API finishes
+        return next > 95 ? 95 : next 
       })
     }, 150)
 
     try {
-      await api.triggerScreening(jobId)
+      await api.triggerScreening(jobId, weights)
       const screeningResults = await api.getScreeningResults(jobId)
       setResults(screeningResults)
       
@@ -161,18 +169,18 @@ export default function ScreeningPage() {
             <CardHeader>
               <div className="flex items-center gap-2 mb-2">
                 <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5">
-                  <IconSparkles size={12} className="mr-1" /> Powered by Gemini
+                  <IconSparkles size={12} className="mr-1" /> Powered by Gemini 2.5 Flash-Lite
                 </Badge>
               </div>
               <CardTitle>Initialize Evaluation</CardTitle>
               <CardDescription>
-                Select an active job opening to begin the AI-driven screening process.
+                Select an active job opening and define your priority weights.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6 text-foreground">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Target Job Opening</label>
-                <Select onValueChange={setJobId} value={jobId || undefined}>
+                <Select onValueChange={setJobId} value={jobId || ""}>
                   <SelectTrigger className="h-12 text-base">
                     <SelectValue placeholder="Select a job position..." />
                   </SelectTrigger>
@@ -182,12 +190,71 @@ export default function ScreeningPage() {
                         {job.title}
                       </SelectItem>
                     ))}
-                    {jobs.length === 0 && !isLoadingJobs && (
-                      <div className="p-2 text-sm text-muted-foreground">No jobs found</div>
-                    )}
                   </SelectContent>
                 </Select>
               </div>
+
+              <Accordion type="single" collapsible className="w-full border rounded-lg px-4 bg-muted/30">
+                <AccordionItem value="weights" className="border-none">
+                  <AccordionTrigger className="hover:no-underline">
+                    <span className="flex items-center gap-2 text-sm font-semibold">
+                      <IconCommand size={16} /> Matrix Weighting Preferences
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent className="space-y-6 pt-2 pb-6">
+                    <div className="space-y-4">
+                      <div className="space-y-3">
+                        <div className="flex justify-between text-sm">
+                          <span className="font-medium text-muted-foreground">Technical Skills</span>
+                          <span className="text-primary font-bold">{weights.skills}%</span>
+                        </div>
+                        <Slider 
+                          value={[weights.skills]} 
+                          max={100} step={5} 
+                          onValueChange={([v]) => setWeights(prev => ({ ...prev, skills: v }))} 
+                        />
+                      </div>
+                      <div className="space-y-3">
+                        <div className="flex justify-between text-sm">
+                          <span className="font-medium text-muted-foreground">Work Experience</span>
+                          <span className="text-primary font-bold">{weights.experience}%</span>
+                        </div>
+                        <Slider 
+                          value={[weights.experience]} 
+                          max={100} step={5} 
+                          onValueChange={([v]) => setWeights(prev => ({ ...prev, experience: v }))} 
+                        />
+                      </div>
+                      <div className="space-y-3">
+                        <div className="flex justify-between text-sm">
+                          <span className="font-medium text-muted-foreground">Education & Certs</span>
+                          <span className="text-primary font-bold">{weights.education}%</span>
+                        </div>
+                        <Slider 
+                          value={[weights.education]} 
+                          max={100} step={5} 
+                          onValueChange={([v]) => setWeights(prev => ({ ...prev, education: v }))} 
+                        />
+                      </div>
+                      <div className="space-y-3">
+                        <div className="flex justify-between text-sm">
+                          <span className="font-medium text-muted-foreground">Projects Relevance</span>
+                          <span className="text-primary font-bold">{weights.projects}%</span>
+                        </div>
+                        <Slider 
+                          value={[weights.projects]} 
+                          max={100} step={5} 
+                          onValueChange={([v]) => setWeights(prev => ({ ...prev, projects: v }))} 
+                        />
+                      </div>
+                    </div>
+                    <div className="p-3 bg-primary/5 rounded border border-primary/10 text-xs text-muted-foreground flex gap-2">
+                       <IconBrain size={16} className="text-primary shrink-0" />
+                       Gemini will prioritize candidates who excel in the highest-weighted areas during match analysis.
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </CardContent>
             <CardFooter className="border-t pt-6 gap-4">
               {hasPreviousResults && (
@@ -234,14 +301,6 @@ export default function ScreeningPage() {
                   <span className="text-primary font-bold">04.</span> Cultural alignment prediction
                 </li>
               </ul>
-              <div className="pt-4 p-4 rounded-lg bg-white/50 dark:bg-black/20 border border-primary/10">
-                <p className="font-medium text-foreground flex items-center gap-2">
-                  <IconCommand size={16} /> Leaderboard sorting logic
-                </p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Results are ranked by composite AI Score, then by years of critical experience.
-                </p>
-              </div>
             </CardContent>
           </Card>
         </div>
@@ -256,23 +315,12 @@ export default function ScreeningPage() {
                 <IconSparkles size={40} className="text-primary animate-pulse" />
              </div>
           </div>
-          
           <div className="max-w-md w-full space-y-6 text-center">
             <div className="space-y-2">
               <h2 className="text-2xl font-bold tracking-tight">{steps[step]}</h2>
               <p className="text-muted-foreground">{progress}% Complete</p>
             </div>
-            
             <Progress value={progress} className="h-3 shadow-inner" />
-            
-            <div className="flex justify-center gap-2">
-              {[0, 1, 2, 3, 4].map((i) => (
-                <div 
-                  key={i} 
-                  className={`h-2 w-12 rounded-full transition-all duration-500 ${i <= step ? "bg-primary scale-110" : "bg-muted"}`} 
-                />
-              ))}
-            </div>
           </div>
         </div>
       )}

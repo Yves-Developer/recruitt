@@ -20,6 +20,8 @@ export function ApplicantUpload({ jobId, onSuccess }: ApplicantUploadProps) {
   const [progress, setProgress] = React.useState(0)
   const [status, setStatus] = React.useState<"idle" | "uploading" | "parsing" | "complete">("idle")
 
+  const isBulkFile = file && (file.name.endsWith('.csv') || file.name.endsWith('.xlsx'))
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0])
@@ -36,32 +38,40 @@ export function ApplicantUpload({ jobId, onSuccess }: ApplicantUploadProps) {
 
     try {
       const formData = new FormData()
-      formData.append("resume", file)
+      formData.append(isBulkFile ? "file" : "resume", file)
       formData.append("jobId", jobId)
 
       setProgress(60)
       setStatus("parsing")
       
-      await api.uploadResume(formData)
+      if (isBulkFile) {
+        const res = await api.uploadBulk(formData)
+        toast.success(`Bulk Ingestion Complete! ${res.count} talents added.`)
+      } else {
+        await api.uploadResume(formData)
+        toast.success("Resume parsed successfully! Talent profile created.")
+      }
       
       setProgress(100)
       setStatus("complete")
       setIsUploading(false)
-      toast.success("Resume parsed successfully! Talent profile created.")
       onSuccess?.()
     } catch (error: any) {
       setIsUploading(false)
       setStatus("idle")
-      toast.error(error.message || "Failed to upload and parse resume")
+      toast.error(error.message || "Failed to upload and parse data")
     }
   }
 
   return (
     <Card className="w-full border-dashed border-2 bg-card/50">
       <CardHeader>
-        <CardTitle>AI Resume Parser</CardTitle>
+        <CardTitle>{isBulkFile ? "AI Bulk Data Ingestion" : "AI Ingestion Engine"}</CardTitle>
         <CardDescription>
-          Upload a PDF or DOCX file. Our AI will automatically extract experience, skills, and education.
+          {isBulkFile 
+            ? "Upload a spreadsheet (CSV/XLSX). Our AI will map columns to the Talent Profile Schema."
+            : "Upload PDF resumes or spreadsheets. Our AI automatically extracts experience and skills."
+          }
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col items-center justify-center py-12">
@@ -72,13 +82,13 @@ export function ApplicantUpload({ jobId, onSuccess }: ApplicantUploadProps) {
             </div>
             <div className="text-center">
               <p className="font-medium">Click to upload or drag and drop</p>
-              <p className="text-sm text-muted-foreground">PDF, DOCX up to 10MB</p>
+              <p className="text-sm text-muted-foreground">PDF, CSV, XLSX up to 10MB</p>
             </div>
             <input
               type="file"
               className="hidden"
               id="resume-upload"
-              accept=".pdf,.docx"
+              accept=".pdf,.csv,.xlsx"
               onChange={handleFileChange}
             />
             <Button asChild variant="outline">
@@ -103,13 +113,13 @@ export function ApplicantUpload({ jobId, onSuccess }: ApplicantUploadProps) {
             {isUploading && (
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span>{status === "uploading" ? "Uploading..." : "AI Parsing Experience..."}</span>
+                  <span>{status === "uploading" ? "Uploading..." : (isBulkFile ? "AI Multi-Row Analysis..." : "AI Parsing Experience...")}</span>
                   <span>{progress}%</span>
                 </div>
                 <Progress value={progress} className="h-2" />
                 {status === "parsing" && (
                   <p className="text-center text-xs text-muted-foreground animate-pulse mt-2">
-                    Gemini FLASH is analyzing the document structure...
+                    Gemini FLASH is mapping the data structure...
                   </p>
                 )}
               </div>
@@ -118,13 +128,13 @@ export function ApplicantUpload({ jobId, onSuccess }: ApplicantUploadProps) {
             {!isUploading && status !== "complete" && (
               <div className="flex gap-2 justify-end">
                 <Button variant="ghost" onClick={() => setFile(null)}>Cancel</Button>
-                <Button onClick={startUpload}>Start AI Ingestion</Button>
+                <Button onClick={startUpload}>Start {isBulkFile ? "Bulk Ingestion" : "AI Ingestion"}</Button>
               </div>
             )}
 
             {status === "complete" && (
               <Button variant="outline" className="w-full" onClick={() => {setFile(null); setStatus("idle")}}>
-                Upload Another
+                Process Another File
               </Button>
             )}
           </div>

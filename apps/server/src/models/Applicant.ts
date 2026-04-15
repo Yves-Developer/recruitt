@@ -13,9 +13,9 @@ const ApplicantSchema: Schema = new Schema(
     location: { type: String, required: true },
     skills: [
       {
-        name: { type: String, required: true },
-        level: { type: String, required: true },
-        yearsOfExperience: { type: Number, required: true },
+        name: { type: String },
+        level: { type: String },
+        yearsOfExperience: { type: Number },
       },
     ],
     languages: [
@@ -26,21 +26,21 @@ const ApplicantSchema: Schema = new Schema(
     ],
     experience: [
       {
-        company: { type: String, required: true },
-        role: { type: String, required: true },
-        startDate: { type: String, required: true },
+        company: { type: String },
+        role: { type: String },
+        startDate: { type: String },
         endDate: { type: String },
-        description: { type: String, required: true },
+        description: { type: String },
         technologies: { type: [String], default: [] },
-        isCurrent: { type: Boolean, required: true },
+        isCurrent: { type: Boolean, default: false },
       },
     ],
     education: [
       {
-        institution: { type: String, required: true },
-        degree: { type: String, required: true },
-        fieldOfStudy: { type: String, required: true },
-        startYear: { type: Number, required: true },
+        institution: { type: String },
+        degree: { type: String },
+        fieldOfStudy: { type: String },
+        startYear: { type: Number },
         endYear: { type: Number },
       },
     ],
@@ -53,18 +53,18 @@ const ApplicantSchema: Schema = new Schema(
     ],
     projects: [
       {
-        name: { type: String, required: true },
-        description: { type: String, required: true },
+        name: { type: String },
+        description: { type: String },
         technologies: { type: [String], default: [] },
-        role: { type: String, required: true },
+        role: { type: String },
         link: { type: String },
-        startDate: { type: String, required: true },
+        startDate: { type: String },
         endDate: { type: String },
       },
     ],
     availability: {
-      status: { type: String, required: true },
-      type: { type: String, required: true },
+      status: { type: String, default: "Open to Opportunities" },
+      type: { type: String, default: "Full-time" },
       startDate: { type: String },
     },
     socialLinks: {
@@ -78,7 +78,7 @@ const ApplicantSchema: Schema = new Schema(
   { timestamps: true }
 );
 
-// Email uniqueness per job applied could be a good idea, but here we'll just index it
+// Email uniqueness per job applied
 ApplicantSchema.index({ email: 1, jobId: 1 }, { unique: true });
 
 export default mongoose.model<ApplicantDocument>("Applicant", ApplicantSchema);

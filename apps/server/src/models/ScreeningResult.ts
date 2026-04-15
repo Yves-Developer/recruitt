@@ -15,6 +15,11 @@ const ScreeningResultSchema: Schema = new Schema(
     strengths: { type: [String], required: true },
     gapsRisks: { type: [String], required: true },
     finalRecommendation: { type: String, required: true },
+    status: { 
+      type: String, 
+      enum: ["Evaluated", "Shortlisted", "Rejected", "Review later"], 
+      default: "Evaluated" 
+    },
   },
   { timestamps: true }
 );

@@ -4,6 +4,10 @@ import { ApplicantDocument } from "../models/Applicant.js";
 
 let genAI: GoogleGenerativeAI | null = null;
 
+/**
+ * Initializes and returns a Gemini generative model instance.
+ * @returns {GenerativeModel} The configured Gemini flash model.
+ */
 const getModel = () => {
   if (!genAI) {
     const key = (process.env.GEMINI_API_KEY || "").trim();
@@ -13,9 +17,12 @@ const getModel = () => {
     }
     genAI = new GoogleGenerativeAI(key || "dummy_key_if_missing");
   }
-  return genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+  return genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 };
 
+/**
+ * Output structure for a single applicant evaluation.
+ */
 export interface GeminScreeningOutput {
   applicantId: string;
   rank: number;
@@ -25,9 +32,27 @@ export interface GeminScreeningOutput {
   finalRecommendation: string;
 }
 
+/**
+ * Scoring priorities for the AI screening matrix.
+ */
+export interface ScreeningWeights {
+  skills: number;
+  experience: number;
+  education: number;
+  projects?: number;
+}
+
+/**
+ * Uses Gemini AI to analyze, score, and rank candidates against job requirements.
+ * @param {JobDocument} job - The job description and requirements.
+ * @param {ApplicantDocument[]} applicants - List of candidates to evaluate.
+ * @param {ScreeningWeights} [weights] - Optional priority weights for scoring logic.
+ * @returns {Promise<GeminScreeningOutput[]>} Array of AI-generated evaluations.
+ */
 export const screenCandidates = async (
   job: JobDocument,
-  applicants: ApplicantDocument[]
+  applicants: ApplicantDocument[],
+  weights?: ScreeningWeights
 ): Promise<GeminScreeningOutput[]> => {
   const model = getModel();
 
@@ -42,11 +67,21 @@ export const screenCandidates = async (
     projects: a.projects?.map(p => `${p.name || 'Project'} - ${p.description || 'No description'}`) || []
   }));
 
+  const weightInstruct = weights 
+    ? `IMPORTANT: When scoring, apply the following weights to your evaluation criteria:
+       - Technical Skills: ${weights.skills}%
+       - Work Experience: ${weights.experience}%
+       - Academic Education: ${weights.education}%
+       - Relevant Projects: ${weights.projects || 10}%`
+    : "Use a balanced evaluation considering skills, experience, and education equally.";
+
   const prompt = `
     You are an expert HR recruitment assistant. 
     Analyze the following job description and the list of applicants.
     Rank the applicants based on their suitability for the role.
     
+    ${weightInstruct}
+
     Job Description:
     ${JSON.stringify({
     title: job.title,

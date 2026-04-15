@@ -68,7 +68,7 @@ export default function ApplicantsPage() {
             <p className="text-sm text-muted-foreground">Applicants must be associated with a specific opening.</p>
           </div>
           <div className="w-full md:w-80">
-            <Select onValueChange={setJobId} value={jobId || undefined}>
+            <Select onValueChange={setJobId} value={jobId || ""}>
               <SelectTrigger className="h-12 text-base">
                 <SelectValue placeholder="Select a job position..." />
               </SelectTrigger>

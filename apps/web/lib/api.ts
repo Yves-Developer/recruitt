@@ -45,11 +45,22 @@ export const api = {
     if (!res.ok) throw new Error('Failed to upload resume');
     return res.json();
   },
+  
+  async uploadBulk(formData: FormData): Promise<{ message: string; count: number }> {
+    const res = await fetch(`${API_BASE_URL}/applicants/bulk`, {
+      method: 'POST',
+      body: formData,
+    });
+    if (!res.ok) throw new Error('Failed to upload bulk data');
+    return res.json();
+  },
 
   // Screening
-  async triggerScreening(jobId: string): Promise<{ message: string; count: number }> {
+  async triggerScreening(jobId: string, weights?: any): Promise<{ message: string; count: number }> {
     const res = await fetch(`${API_BASE_URL}/screening/trigger/${jobId}`, {
       method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ weights }),
     });
     if (!res.ok) throw new Error('Failed to trigger screening');
     return res.json();
@@ -64,6 +75,16 @@ export const api = {
   async getAllRecentScreenings(): Promise<any[]> {
     const res = await fetch(`${API_BASE_URL}/screening/recent`);
     if (!res.ok) throw new Error('Failed to fetch recent screenings');
+    return res.json();
+  },
+
+  async updateScreeningStatus(id: string, status: string): Promise<ScreeningResult> {
+    const res = await fetch(`${API_BASE_URL}/screening/result/${id}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status }),
+    });
+    if (!res.ok) throw new Error('Failed to update screening status');
     return res.json();
   },
 };

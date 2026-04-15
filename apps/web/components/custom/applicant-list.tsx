@@ -3,9 +3,11 @@
 import * as React from "react"
 import { Applicant } from "@repo/shared"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { IconMapPin, IconMail, IconArrowRight, IconUser, IconLoader2, IconRefresh } from "@tabler/icons-react"
+import { IconMapPin, IconMail, IconArrowRight, IconUser, IconLoader2, IconRefresh, IconEye } from "@tabler/icons-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+
+import { TalentDetailsSheet } from "@/components/custom/talent-details-sheet"
 
 interface ApplicantListProps {
   applicants: Applicant[];
@@ -14,17 +16,31 @@ interface ApplicantListProps {
 }
 
 export function ApplicantList({ applicants, isLoading, onRefresh }: ApplicantListProps) {
+  const [selectedApplicant, setSelectedApplicant] = React.useState<Applicant | null>(null)
+  const [isDetailsOpen, setIsDetailsOpen] = React.useState(false)
+
+  const handleViewProfile = (applicant: Applicant) => {
+    setSelectedApplicant(applicant)
+    setIsDetailsOpen(true)
+  }
+
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
         <IconLoader2 className="animate-spin text-primary" size={40} />
-        <p className="text-muted-foreground animate-pulse">Syncing talent pool...</p>
+        <p className="text-muted-foreground animate-pulse font-medium">Synchronizing talent database...</p>
       </div>
     )
   }
 
   return (
     <div className="space-y-6">
+      <TalentDetailsSheet 
+        applicant={selectedApplicant} 
+        open={isDetailsOpen} 
+        onOpenChange={setIsDetailsOpen} 
+      />
+      
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Active Talent Pool</h2>
@@ -54,7 +70,7 @@ export function ApplicantList({ applicants, isLoading, onRefresh }: ApplicantLis
                   </div>
                 </div>
                 <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10">
-                  {applicant.availability.status}
+                  {applicant.availability?.status || "Active"}
                 </Badge>
               </div>
             </CardHeader>
@@ -65,8 +81,8 @@ export function ApplicantList({ applicants, isLoading, onRefresh }: ApplicantLis
                     {skill.name}
                   </Badge>
                 ))}
-                {applicant.skills.length > 3 && (
-                   <span className="text-[10px] text-muted-foreground flex items-center">+{applicant.skills.length - 3} more</span>
+                {(applicant.skills || []).length > 3 && (
+                   <span className="text-[10px] text-muted-foreground flex items-center">+{(applicant.skills || []).length - 3} more</span>
                 )}
               </div>
               
@@ -75,8 +91,13 @@ export function ApplicantList({ applicants, isLoading, onRefresh }: ApplicantLis
                    <span className="flex items-center gap-1"><IconMapPin size={14} /> {applicant.location}</span>
                    <span className="flex items-center gap-1"><IconMail size={14} /> {applicant.email.split('@')[0]}...</span>
                 </div>
-                <Button variant="ghost" size="sm" className="h-8 px-2 group-hover:text-primary transition-colors">
-                  View Profile <IconArrowRight size={14} className="ml-1" />
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-8 px-2 group-hover:text-primary transition-colors flex items-center"
+                  onClick={() => handleViewProfile(applicant)}
+                >
+                  View Profile <IconEye size={16} className="ml-2" />
                 </Button>
               </div>
             </CardContent>
