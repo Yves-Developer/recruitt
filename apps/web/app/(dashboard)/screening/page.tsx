@@ -15,13 +15,18 @@ import { Progress } from "@/components/ui/progress"
 import { toast } from "sonner"
 import { Badge } from "@/components/ui/badge"
 import { Leaderboard } from "@/components/custom/leaderboard"
+import { api } from "@/lib/api"
+import { Job, ScreeningResult } from "@repo/shared"
 
 export default function ScreeningPage() {
-  const [jobId, setJobId] = React.useState<string>("")
+  const [jobs, setJobs] = React.useState<Job[]>([])
+  const [results, setResults] = React.useState<ScreeningResult[]>([])
+  const [isLoadingJobs, setIsLoadingJobs] = React.useState(true)
+  const [jobId, setJobId] = React.useState<string | undefined>(undefined)
   const [isProcessing, setIsProcessing] = React.useState(false)
   const [showResults, setShowResults] = React.useState(false)
-  const [step, setStep] = React.useState(0)
   const [progress, setProgress] = React.useState(0)
+  const [step, setStep] = React.useState(0)
 
   const steps = [
     "Fetching applicant profiles...",
@@ -31,7 +36,51 @@ export default function ScreeningPage() {
     "Finalizing leaderboard rankings..."
   ]
 
-  const handleStartScreening = () => {
+  React.useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const data = await api.getJobs()
+        setJobs(data)
+      } catch (error) {
+        toast.error("Failed to fetch jobs")
+      } finally {
+        setIsLoadingJobs(false)
+      }
+    }
+    fetchJobs()
+  }, [])
+
+  const [hasPreviousResults, setHasPreviousResults] = React.useState(false)
+
+  React.useEffect(() => {
+    const checkPrevious = async () => {
+      if (jobId) {
+        try {
+          const existing = await api.getScreeningResults(jobId)
+          setHasPreviousResults(existing.length > 0)
+        } catch (error) {
+          setHasPreviousResults(false)
+        }
+      }
+    }
+    checkPrevious()
+  }, [jobId])
+
+  const handleLoadPrevious = async () => {
+    if (!jobId) return
+    setIsLoadingJobs(true)
+    try {
+      const existing = await api.getScreeningResults(jobId)
+      setResults(existing)
+      setShowResults(true)
+    } catch (error) {
+      toast.error("Failed to load previous results")
+    } finally {
+      setIsLoadingJobs(false)
+    }
+  }
+
+  const handleStartScreening = async () => {
     if (!jobId) {
       toast.error("Please select a job to screen for.")
       return
@@ -42,24 +91,37 @@ export default function ScreeningPage() {
     setStep(0)
     setProgress(0)
 
+    // Parallel simulation of progress while waiting for backend
     const interval = setInterval(() => {
       setProgress((prev) => {
         const next = prev + 1
         if (next % 20 === 0 && next < 100) {
           setStep((s) => s + 1)
         }
-        if (next >= 100) {
-          clearInterval(interval)
-          setTimeout(() => {
-            setIsProcessing(false)
-            setShowResults(true)
-            toast.success("AI Matrix Assessment complete!")
-          }, 500)
-          return 100
-        }
-        return next
+        return next > 95 ? 95 : next // Hold at 95 until real API finishes
       })
-    }, 100)
+    }, 150)
+
+    try {
+      await api.triggerScreening(jobId)
+      const screeningResults = await api.getScreeningResults(jobId)
+      setResults(screeningResults)
+      
+      clearInterval(interval)
+      setProgress(100)
+      setStep(4)
+      
+      setTimeout(() => {
+        setIsProcessing(false)
+        setShowResults(true)
+        setHasPreviousResults(true)
+        toast.success("AI Matrix Assessment complete!")
+      }, 500)
+    } catch (error: any) {
+      clearInterval(interval)
+      setIsProcessing(false)
+      toast.error(error.message || "AI Screening failed")
+    }
   }
 
   const handleReset = () => {
@@ -76,7 +138,7 @@ export default function ScreeningPage() {
           <h1 className="text-3xl font-bold tracking-tight">AI Screening Matrix</h1>
           <p className="text-muted-foreground mt-1">
             {showResults 
-              ? `Reviewing Top Matches for Senior Fullstack Engineer`
+              ? `Reviewing Top Matches for Selected Position`
               : `Orchestrate the automated evaluation of applicants against your job criteria.`
             }
           </p>
@@ -99,7 +161,7 @@ export default function ScreeningPage() {
             <CardHeader>
               <div className="flex items-center gap-2 mb-2">
                 <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5">
-                  <IconSparkles size={12} className="mr-1" /> Powered by Gemini Flash
+                  <IconSparkles size={12} className="mr-1" /> Powered by Gemini
                 </Badge>
               </div>
               <CardTitle>Initialize Evaluation</CardTitle>
@@ -110,25 +172,40 @@ export default function ScreeningPage() {
             <CardContent className="space-y-6 text-foreground">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Target Job Opening</label>
-                <Select onValueChange={setJobId}>
+                <Select onValueChange={setJobId} value={jobId || undefined}>
                   <SelectTrigger className="h-12 text-base">
                     <SelectValue placeholder="Select a job position..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="job-1">Senior Fullstack Engineer</SelectItem>
-                    <SelectItem value="job-2">AI Product Manager</SelectItem>
-                    <SelectItem value="job-4">Marketing Lead</SelectItem>
+                    {jobs.map((job) => (
+                      <SelectItem key={job._id || job.id} value={(job._id || job.id)!}>
+                        {job.title}
+                      </SelectItem>
+                    ))}
+                    {jobs.length === 0 && !isLoadingJobs && (
+                      <div className="p-2 text-sm text-muted-foreground">No jobs found</div>
+                    )}
                   </SelectContent>
                 </Select>
               </div>
             </CardContent>
-            <CardFooter className="border-t pt-6">
+            <CardFooter className="border-t pt-6 gap-4">
+              {hasPreviousResults && (
+                <Button 
+                  variant="outline"
+                  className="flex-1 gap-2 h-14"
+                  onClick={handleLoadPrevious}
+                  disabled={!jobId}
+                >
+                  <IconBrain size={20} className="text-primary" /> View Previous Results
+                </Button>
+              )}
               <Button 
-                className="w-full gap-2 text-lg h-14 shadow-lg shadow-primary/20" 
+                className={`gap-2 text-lg h-14 shadow-lg shadow-primary/20 ${hasPreviousResults ? "flex-1" : "w-full"}`}
                 disabled={!jobId}
                 onClick={handleStartScreening}
               >
-                <IconRocket size={20} /> Initialize AI Matrix Assessment
+                <IconRocket size={20} /> {hasPreviousResults ? "Re-trigger AI Bio-Matrix" : "Initialize AI Matrix Assessment"}
               </Button>
             </CardFooter>
           </Card>
@@ -202,7 +279,7 @@ export default function ScreeningPage() {
 
       {showResults && (
         <div className="space-y-6 animate-in slide-in-from-bottom-8 fade-in duration-700">
-          <Leaderboard />
+          <Leaderboard results={results} jobTitle={jobs.find(j => (j._id || j.id) === jobId)?.title || "Selected Job"} />
         </div>
       )}
     </div>

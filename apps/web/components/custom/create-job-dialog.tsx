@@ -34,8 +34,15 @@ const jobSchema = z.object({
 
 type JobFormValues = z.infer<typeof jobSchema>
 
-export function CreateJobDialog() {
+import { api } from "@/lib/api"
+
+interface CreateJobDialogProps {
+  onSuccess: () => void;
+}
+
+export function CreateJobDialog({ onSuccess }: CreateJobDialogProps) {
   const [open, setOpen] = React.useState(false)
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
   const form = useForm<JobFormValues>({
     resolver: zodResolver(jobSchema),
     defaultValues: {
@@ -48,22 +55,26 @@ export function CreateJobDialog() {
 
   async function onSubmit(data: JobFormValues) {
     try {
+      setIsSubmitting(true)
       // Convert comma-separated strings to arrays as expected by backend
       const payload = {
-        ...data,
+        title: data.title,
+        description: data.description,
         requirements: data.requirements.split("\n").filter(r => r.trim() !== ""),
         skills: data.skills.split(",").map(s => s.trim()).filter(s => s !== ""),
+        status: "open" as const
       }
 
-      console.log("Submitting job:", payload)
-      // In a real app, we would fetch here
-      // await fetch("/api/jobs", { method: "POST", body: JSON.stringify(payload) })
+      await api.createJob(payload)
       
       toast.success("Job opening created successfully!")
       setOpen(false)
       form.reset()
+      onSuccess()
     } catch (error) {
       toast.error("Failed to create job opening")
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -134,7 +145,9 @@ export function CreateJobDialog() {
           </Field>
 
           <DialogFooter>
-            <Button type="submit" className="w-full sm:w-auto">Create Job</Button>
+            <Button type="submit" className="w-full sm:w-auto" disabled={isSubmitting}>
+              {isSubmitting ? "Creating..." : "Create Job"}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

@@ -5,6 +5,7 @@ import { ThemeProvider } from "../components/theme-provider";
 import { ThemeToggle } from "../components/theme-toggle";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -34,6 +35,7 @@ export default function RootLayout({
         >
           <TooltipProvider>
             <main>{children}</main>
+            <Toaster position="top-center" richColors />
           </TooltipProvider>
         </ThemeProvider>
       </body>

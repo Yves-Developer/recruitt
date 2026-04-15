@@ -26,7 +26,15 @@ export const triggerScreening = async (req: Request, res: Response) => {
     await ScreeningResult.deleteMany({ jobId });
 
     // Prepare objects aligned with Mongo Schema
-    const resultsToInsert = evaluations.map((ev) => ({
+    const applicantIds = applicants.map(a => a._id.toString());
+    const matchedEvaluations = evaluations.filter(ev => applicantIds.includes(ev.applicantId));
+
+    if (matchedEvaluations.length === 0 && evaluations.length > 0) {
+      console.error("Gemini hallucinated applicant IDs or failed to match them.");
+      throw new Error("AI failed to link evaluations to candidates correctly. Please try again.");
+    }
+
+    const resultsToInsert = matchedEvaluations.map((ev) => ({
       jobId,
       applicantId: ev.applicantId,
       rank: ev.rank,
@@ -43,6 +51,7 @@ export const triggerScreening = async (req: Request, res: Response) => {
       count: resultsToInsert.length,
     });
   } catch (error: any) {
+    console.error("AI Screening Error Detail:", error);
     res.status(500).json({ message: "AI Screening failed", error: error.message });
   }
 };
@@ -58,5 +67,19 @@ export const getScreeningResults = async (req: Request, res: Response) => {
     res.status(200).json(results);
   } catch (error: any) {
     res.status(500).json({ message: "Failed to fetch screening results", error: error.message });
+  }
+};
+
+export const getAllRecentScreenings = async (req: Request, res: Response) => {
+  try {
+    const results = await ScreeningResult.find()
+      .populate("applicantId", "firstName lastName headline")
+      .populate("jobId", "title")
+      .sort({ createdAt: -1 })
+      .limit(10);
+    
+    res.status(200).json(results);
+  } catch (error: any) {
+    res.status(500).json({ message: "Failed to fetch recent screenings", error: error.message });
   }
 };

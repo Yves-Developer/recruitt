@@ -1,10 +1,18 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { Applicant } from "@repo/shared";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "dummy_key");
+let genAI: GoogleGenerativeAI | null = null;
+
+const getModel = () => {
+  if (!genAI) {
+    const key = (process.env.GEMINI_API_KEY || "").trim();
+    genAI = new GoogleGenerativeAI(key || "dummy_key");
+  }
+  return genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+};
 
 export const parseResumeTextToSchema = async (rawText: string): Promise<Partial<Applicant>> => {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const model = getModel();
 
   const prompt = `
     You are an expert recruitment AI. I will provide you with raw text extracted from a candidate's resume/CV.

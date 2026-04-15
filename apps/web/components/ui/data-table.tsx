@@ -218,10 +218,18 @@ function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
 
 export function DataTable({
   data: initialData,
+  isLoading,
 }: {
   data: z.infer<typeof schema>[]
+  isLoading?: boolean
 }) {
-  const [data, setData] = React.useState(() => initialData)
+  const [data, setData] = React.useState<z.infer<typeof schema>[]>(initialData || [])
+
+  React.useEffect(() => {
+    if (initialData) {
+      setData(initialData)
+    }
+  }, [initialData])
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
@@ -358,7 +366,16 @@ export function DataTable({
                 ))}
               </TableHeader>
               <TableBody className="**:data-[slot=table-cell]:first:w-8">
-                {table.getRowModel().rows?.length ? (
+                {isLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={columns.length} className="h-24 text-center">
+                      <div className="flex items-center justify-center gap-2">
+                        <IconLoader className="animate-spin text-primary" />
+                        <span>Synchronizing with Matrix...</span>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : table.getRowModel().rows?.length ? (
                   <SortableContext
                     items={dataIds}
                     strategy={verticalListSortingStrategy}
@@ -371,9 +388,9 @@ export function DataTable({
                   <TableRow>
                     <TableCell
                       colSpan={columns.length}
-                      className="h-24 text-center"
+                      className="h-24 text-center font-medium text-muted-foreground"
                     >
-                      No results.
+                      No recent assessment activity found.
                     </TableCell>
                   </TableRow>
                 )}

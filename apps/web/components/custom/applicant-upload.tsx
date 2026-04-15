@@ -7,7 +7,14 @@ import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { toast } from "sonner"
 
-export function ApplicantUpload() {
+import { api } from "@/lib/api"
+
+interface ApplicantUploadProps {
+  jobId: string;
+  onSuccess?: () => void;
+}
+
+export function ApplicantUpload({ jobId, onSuccess }: ApplicantUploadProps) {
   const [isUploading, setIsUploading] = React.useState(false)
   const [file, setFile] = React.useState<File | null>(null)
   const [progress, setProgress] = React.useState(0)
@@ -20,33 +27,33 @@ export function ApplicantUpload() {
     }
   }
 
-  const startUpload = () => {
-    if (!file) return
+  const startUpload = async () => {
+    if (!file || !jobId) return
 
     setIsUploading(true)
     setStatus("uploading")
-    setProgress(0)
+    setProgress(30)
 
-    // Simulate upload
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval)
-          setStatus("parsing")
-          simulateParsing()
-          return 100
-        }
-        return prev + 10
-      })
-    }, 200)
-  }
+    try {
+      const formData = new FormData()
+      formData.append("resume", file)
+      formData.append("jobId", jobId)
 
-  const simulateParsing = () => {
-    setTimeout(() => {
+      setProgress(60)
+      setStatus("parsing")
+      
+      await api.uploadResume(formData)
+      
+      setProgress(100)
       setStatus("complete")
       setIsUploading(false)
       toast.success("Resume parsed successfully! Talent profile created.")
-    }, 2000)
+      onSuccess?.()
+    } catch (error: any) {
+      setIsUploading(false)
+      setStatus("idle")
+      toast.error(error.message || "Failed to upload and parse resume")
+    }
   }
 
   return (

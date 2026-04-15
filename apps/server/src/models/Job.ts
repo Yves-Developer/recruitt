@@ -10,6 +10,7 @@ const JobSchema: Schema = new Schema(
     requirements: { type: [String], required: true },
     skills: { type: [String], required: true },
     status: { type: String, enum: ["open", "closed"], default: "open" },
+    location: { type: String, required: true },
   },
   { timestamps: true }
 );
