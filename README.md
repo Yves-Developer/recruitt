@@ -1,159 +1,89 @@
-# Turborepo starter
+# 🚀 Recruitt - AI Talent Screening Platform
 
-This Turborepo starter is maintained by the Turborepo core team.
+Recruitt is a powerful, high-performance talent acquisition engine designed to optimize the intelligence matrix for modern recruiters. It leverages **Gemini 2.5 Flash** for deep semantic analysis of resumes and job requirements.
 
-## Using this example
+## 🛠️ Local Development
 
-Run the following command:
+To get the full Recruitt engine running on your machine, follow these steps:
 
-```sh
-npx create-turbo@latest
+### 1. Prerequisites
+- **Node.js**: v18.0.0 or higher
+- **pnpm**: Fast, disk-space-efficient package manager
+- **MongoDB**: A running instance (local or Atlas)
+- **Gemini API Key**: Required for the AI screening pipeline
+
+### 2. Installation
+```bash
+# Install dependencies for the entire monorepo
+pnpm install
 ```
 
-## What's inside?
-
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo build
+### 3. Environment Configuration
+Create an `.env` file in `apps/server/.env`:
+```env
+PORT=5000
+MONGODB_URI=your_mongodb_connection_string
+GEMINI_API_KEY=your_gemini_api_key
 ```
 
-Without global `turbo`, use your package manager:
+### 4. Running the Platform
+You can start all services (Frontend, Backend, and Docs) simultaneously from the root:
+```bash
+pnpm dev
+```
+- **Dashboard**: `http://localhost:3000`
+- **Server**: `http://localhost:5000`
+- **Docs**: `http://localhost:3001`
 
-```sh
-cd my-turborepo
-npx turbo build
-pnpm dlx turbo build
-pnpm exec turbo build
+---
+
+## 🏗️ Technical Architecture
+
+### 🗺️ Recruiter User Flow
+The frontend is designed for high-velocity decision making, focusing on clarity and AI explainability.
+
+```mermaid
+journey
+    title Recruiter Journey
+    section Job Setup
+      Create Job Posting: 5: Recruiter
+      Define Requirements: 4: Recruiter
+    section Talent Ingestion
+      Upload PDF Resumes: 5: AI-Parser
+      Bulk Import CSV/Excel: 5: AI-Mapper
+    section Matrix Evaluation
+      Adjust Screening Weights: 4: Recruiter
+      Trigger Matrix Assessment: 5: Gemini-AI
+    section Final Selection
+      Review Leaderboard: 5: Recruiter
+      Shortlist Candidates: 5: Recruiter
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+### 🧠 AI Decision Pipeline
+The backend orchestrates semantic comparisons between talent profiles and job specifications using a weighted matrix approach.
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo build --filter=docs
+```mermaid
+graph TD
+    A[Recruiter Triggers Screening] --> B[Fetch Job & Applicant Data]
+    B --> C[Flatten Data for LLM Context]
+    C --> D[Apply User Weights: Skills/Exp/Edu]
+    D --> E[Gemini 2.5 Flash Processing]
+    E --> F[Generate JSON Output]
+    F --> G[Extract Strengths/Gaps/Scores]
+    G --> H[Persist to MongoDB]
+    H --> I[Notify Frontend Leaderboard]
 ```
 
-Without global `turbo`:
+---
 
-```sh
-npx turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+## 📂 Sub-Project Documentation
 
-### Develop
+Explore more detailed documentation for each part of the platform:
 
-To develop all apps and packages, run the following command:
+- [🎨 **Frontend Dashboard**](apps/web/README.md) - Next.js 16 (App Router) + Tailwind 4
+- [⚙️ **Backend Orchestrator**](apps/server/README.md) - Node.js + TypeScript + Mongoose
+- [📚 **API Documentation**](apps/docs/README.md) - Built with Nuxt Content
+- [📦 **Shared Library**](packages/shared/README.md) - Types and Talent Profile Specifications
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo dev
-pnpm exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo dev --filter=web
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-pnpm exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-pnpm exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+---
+© 2026 Recruitt Technologies. Optimizing the future of talent.
