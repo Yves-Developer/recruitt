@@ -20,6 +20,23 @@ export const api = {
     return res.json();
   },
 
+  async updateJob(id: string, jobData: Partial<Job>): Promise<Job> {
+    const res = await fetch(`${API_BASE_URL}/jobs/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(jobData),
+    });
+    if (!res.ok) throw new Error('Failed to update job');
+    return res.json();
+  },
+
+  async deleteJob(id: string): Promise<void> {
+    const res = await fetch(`${API_BASE_URL}/jobs/${id}`, {
+      method: 'DELETE',
+    });
+    if (!res.ok) throw new Error('Failed to delete job');
+  },
+
   // Applicants
   async getApplicantsByJob(jobId: string): Promise<Applicant[]> {
     const res = await fetch(`${API_BASE_URL}/applicants/job/${jobId}`);

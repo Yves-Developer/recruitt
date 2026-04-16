@@ -42,27 +42,27 @@ import { NavManagement } from "./nav-management"
 const data = {
   navMain: [
     {
-      title: "Command Center",
+      title: "Dashboard",
       url: "/",
       icon: IconDashboard,
     },
     {
-      title: "Job Workspace",
+      title: "Jobs",
       url: "/jobs",
       icon: IconListDetails,
     },
     {
-      title: "Talent Hub",
+      title: "Applicants",
       url: "/applicants",
       icon: IconUsers,
     },
     {
-      title: "AI Screening Matrix",
+      title: "AI Screening",
       url: "/screening",
       icon: IconSparkles,
     },
     {
-      title: "Screening History",
+      title: "History",
       url: "/history",
       icon: IconHistory,
     },
@@ -74,12 +74,14 @@ const data = {
       icon: IconSettings,
     },
     {
-      title: "Help & Support",
+      title: "Help",
       url: "/",
       icon: IconHelp,
     },
   ],
 }
+
+import Image from "next/image"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -91,9 +93,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
-              <a href="/">
-                <IconInnerShadowTop className="size-5! text-primary" />
-                <span className="text-base font-semibold">Recruitt</span>
+              <a href="/" className="flex items-center gap-2.5 group/logo">
+                <Image
+                  src="/RecruittLogoIcon.svg"
+                  alt="Recruitt Logo"
+                  width={12}
+                  height={12}
+                  className="size-4 rounded-xs transition-transform duration-300"
+                />
+                <span className="text-lg font-bold tracking-tight">Recruitt</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

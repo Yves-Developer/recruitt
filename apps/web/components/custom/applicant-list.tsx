@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { Applicant } from "@repo/shared"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardAction } from "@/components/ui/card"
 import { IconMapPin, IconMail, IconArrowRight, IconUser, IconLoader2, IconRefresh, IconEye } from "@tabler/icons-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -53,26 +53,28 @@ export function ApplicantList({ applicants, isLoading, onRefresh }: ApplicantLis
         </Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-1 xl:grid-cols-2">
         {applicants.map((applicant) => (
-          <Card key={applicant._id || applicant.id} className="group hover:border-primary/50 transition-all shadow-sm">
+          <Card key={applicant._id || applicant.id} className="group hover:border-primary/50 transition-all shadow-sm min-w-0">
             <CardHeader className="pb-3">
-              <div className="flex justify-between items-start">
-                <div className="flex gap-3">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                    <IconUser size={20} />
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg">
-                      {applicant.firstName} {applicant.lastName}
-                    </CardTitle>
-                    <p className="text-sm text-muted-foreground font-medium">{applicant.headline}</p>
-                  </div>
+              <div className="flex gap-3 min-w-0">
+                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                  <IconUser size={20} />
                 </div>
-                <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10">
+                <div className="min-w-0 flex-1">
+                  <CardTitle className="text-lg truncate font-bold" title={`${applicant.firstName} ${applicant.lastName}`}>
+                    {applicant.firstName} {applicant.lastName}
+                  </CardTitle>
+                  <p className="text-sm text-muted-foreground font-medium truncate" title={applicant.headline}>
+                    {applicant.headline}
+                  </p>
+                </div>
+              </div>
+              <CardAction>
+                <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 shrink-0 whitespace-nowrap">
                   {applicant.availability?.status || "Active"}
                 </Badge>
-              </div>
+              </CardAction>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex flex-wrap gap-2">
@@ -86,18 +88,22 @@ export function ApplicantList({ applicants, isLoading, onRefresh }: ApplicantLis
                 )}
               </div>
               
-              <div className="flex items-center justify-between pt-2 border-t text-sm text-muted-foreground">
-                <div className="flex items-center gap-4">
-                   <span className="flex items-center gap-1"><IconMapPin size={14} /> {applicant.location}</span>
-                   <span className="flex items-center gap-1"><IconMail size={14} /> {applicant.email.split('@')[0]}...</span>
+              <div className="flex items-center justify-between pt-2 border-t text-sm text-muted-foreground gap-2">
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                   <span className="flex items-center gap-1 truncate" title={applicant.location}>
+                     <IconMapPin size={14} className="shrink-0" /> {applicant.location}
+                   </span>
+                   <span className="hidden sm:flex items-center gap-1 truncate" title={applicant.email}>
+                     <IconMail size={14} className="shrink-0" /> {applicant.email.split('@')[0]}...
+                   </span>
                 </div>
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="h-8 px-2 group-hover:text-primary transition-colors flex items-center"
+                  className="h-8 px-2 group-hover:text-primary transition-colors flex items-center shrink-0"
                   onClick={() => handleViewProfile(applicant)}
                 >
-                  View Profile <IconEye size={16} className="ml-2" />
+                  <span className="hidden sm:inline mr-2">View Profile</span> <IconEye size={16} />
                 </Button>
               </div>
             </CardContent>

@@ -36,46 +36,66 @@ const jobSchema = z.object({
 type JobFormValues = z.infer<typeof jobSchema>
 
 import { api } from "@/lib/api"
+import { Job } from "@repo/shared"
 
 interface CreateJobDialogProps {
   onSuccess: () => void;
+  job?: Job;
+  trigger?: React.ReactNode;
 }
 
-export function CreateJobDialog({ onSuccess }: CreateJobDialogProps) {
+export function CreateJobDialog({ onSuccess, job, trigger }: CreateJobDialogProps) {
   const [open, setOpen] = React.useState(false)
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const form = useForm<JobFormValues>({
     resolver: zodResolver(jobSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      location: "",
-      requirements: "",
-      skills: "",
+      title: job?.title || "",
+      description: job?.description || "",
+      location: job?.location || "",
+      requirements: job?.requirements?.join("\n") || "",
+      skills: job?.skills?.join(", ") || "",
     },
   })
+
+  // Update form if job prop changes (important for edit from dropdown)
+  React.useEffect(() => {
+    if (job) {
+      form.reset({
+        title: job.title,
+        description: job.description,
+        location: job.location,
+        requirements: job.requirements.join("\n"),
+        skills: job.skills.join(", "),
+      })
+    }
+  }, [job, form])
 
   async function onSubmit(data: JobFormValues) {
     try {
       setIsSubmitting(true)
-      // Convert comma-separated strings to arrays as expected by backend
       const payload = {
         title: data.title,
         description: data.description,
         location: data.location,
         requirements: data.requirements.split("\n").filter(r => r.trim() !== ""),
         skills: data.skills.split(",").map(s => s.trim()).filter(s => s !== ""),
-        status: "open" as const
+        status: job?.status || "open"
       }
 
-      await api.createJob(payload as any)
+      if (job) {
+        await api.updateJob(job.id, payload as any)
+        toast.success("Job updated successfully!")
+      } else {
+        await api.createJob(payload as any)
+        toast.success("Job opening created successfully!")
+      }
       
-      toast.success("Job opening created successfully!")
       setOpen(false)
-      form.reset()
+      if (!job) form.reset()
       onSuccess()
     } catch (error) {
-      toast.error("Failed to create job opening")
+      toast.error(job ? "Failed to update job" : "Failed to create job opening")
     } finally {
       setIsSubmitting(false)
     }
@@ -84,16 +104,18 @@ export function CreateJobDialog({ onSuccess }: CreateJobDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-          <IconPlus size={18} className="mr-2" />
-          Post New Job
-        </Button>
+        {trigger || (
+          <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+            <IconPlus size={18} className="mr-2" />
+            Post New Job
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[525px]">
         <DialogHeader>
-          <DialogTitle>Create Job Opening</DialogTitle>
+          <DialogTitle>{job ? "Edit Job Opening" : "Create Job Opening"}</DialogTitle>
           <DialogDescription>
-            Fill in the details for the new recruitment position.
+            {job ? "Update the details for this position." : "Fill in the details for the new recruitment position."}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
@@ -163,7 +185,7 @@ export function CreateJobDialog({ onSuccess }: CreateJobDialogProps) {
 
           <DialogFooter>
             <Button type="submit" className="w-full sm:w-auto" disabled={isSubmitting}>
-              {isSubmitting ? "Creating..." : "Create Job"}
+              {isSubmitting ? (job ? "Updating..." : "Creating...") : (job ? "Update Job" : "Create Job")}
             </Button>
           </DialogFooter>
         </form>
