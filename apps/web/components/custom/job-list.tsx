@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { IconDots, IconEye, IconTrash, IconLoader2 } from "@tabler/icons-react"
+import { IconDots, IconEye, IconTrash, IconLoader2, IconPencil } from "@tabler/icons-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,13 +18,29 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Job } from "@repo/shared"
+import { api } from "@/lib/api"
+import { toast } from "sonner"
+import { CreateJobDialog } from "./create-job-dialog"
+import { JobDetailsDialog } from "./job-details-dialog"
 
 interface JobListProps {
   jobs: Job[];
   isLoading: boolean;
+  onUpdate: () => void;
 }
 
-export function JobList({ jobs, isLoading }: JobListProps) {
+export function JobList({ jobs, isLoading, onUpdate }: JobListProps) {
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this job opening?")) return;
+    try {
+      await api.deleteJob(id);
+      toast.success("Job deleted successfully");
+      onUpdate();
+    } catch (error) {
+      toast.error("Failed to delete job");
+    }
+  }
+
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center p-12 border rounded-xl bg-card gap-4">
@@ -47,9 +63,16 @@ export function JobList({ jobs, isLoading }: JobListProps) {
         </TableHeader>
         <TableBody>
           {jobs.map((job) => (
-            <TableRow key={job.id} className="group transition-colors">
+            <TableRow key={job._id || job.id} className="group transition-colors">
               <TableCell className="font-medium">
-                {job.title}
+                <JobDetailsDialog 
+                  job={job}
+                  trigger={
+                    <button className="hover:text-primary transition-colors text-left font-semibold">
+                      {job.title}
+                    </button>
+                  }
+                />
               </TableCell>
               <TableCell>
                 <Badge 
@@ -79,10 +102,27 @@ export function JobList({ jobs, isLoading }: JobListProps) {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem className="gap-2">
-                      <IconEye size={14} /> View Details
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="gap-2 text-destructive">
+                    <JobDetailsDialog 
+                      job={job} 
+                      trigger={
+                        <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="gap-2 cursor-pointer">
+                          <IconEye size={14} /> View Details
+                        </DropdownMenuItem>
+                      }
+                    />
+                    <CreateJobDialog 
+                      job={job} 
+                      onSuccess={onUpdate} 
+                      trigger={
+                        <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="gap-2 cursor-pointer">
+                          <IconPencil size={14} /> Edit Details
+                        </DropdownMenuItem>
+                      }
+                    />
+                    <DropdownMenuItem 
+                      className="gap-2 text-destructive cursor-pointer"
+                      onClick={() => handleDelete((job._id || job.id)!)}
+                    >
                       <IconTrash size={14} /> Delete
                     </DropdownMenuItem>
                   </DropdownMenuContent>

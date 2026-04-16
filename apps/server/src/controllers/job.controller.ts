@@ -46,3 +46,29 @@ export const getJobById = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error fetching job", error: error.message });
   }
 };
+
+export const updateJob = async (req: Request, res: Response) => {
+  try {
+    const job = await Job.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!job) {
+      res.status(404).json({ message: "Job not found" });
+      return;
+    }
+    res.status(200).json(job);
+  } catch (error: any) {
+    res.status(500).json({ message: "Server error updating job", error: error.message });
+  }
+};
+
+export const deleteJob = async (req: Request, res: Response) => {
+  try {
+    const job = await Job.findByIdAndDelete(req.params.id);
+    if (!job) {
+      res.status(404).json({ message: "Job not found" });
+      return;
+    }
+    res.status(200).json({ message: "Job deleted successfully" });
+  } catch (error: any) {
+    res.status(500).json({ message: "Server error deleting job", error: error.message });
+  }
+};

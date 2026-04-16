@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/create-next-app).
+# 🎨 Recruitt Frontend - Next.js (App Router)
 
-## Getting Started
+A high-performance, recruiter-facing dashboard built for at-a-glance decision making and AI orchestration.
 
-First, run the development server:
+## 🚀 Design Principles
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Speed**: Built on Next.js 16 with Turbo for instant feedback.
+- **Explainability**: Every AI rank is justified with strengths, gaps, and recommendations.
+- **Interaction**: Advanced sliders for matrix weighting and human-in-the-loop controls.
+
+## 🗺️ User Flow
+
+```mermaid
+journey
+    title Recruiter Journey
+    section Job Setup
+      Create Job Posting: 5: Recruiter
+      Define Requirements: 4: Recruiter
+    section Talent Ingestion
+      Upload PDF Resumes: 5: AI-Parser
+      Bulk Import CSV/Excel: 5: AI-Mapper
+    section Matrix Evaluation
+      Adjust Screening Weights: 4: Recruiter
+      Trigger Matrix Assessment: 5: Gemini-AI
+    section Final Selection
+      Review Leaderboard: 5: Recruiter
+      Shortlist Candidates: 5: Recruiter
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Components
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **AI Ingestion Engine**: Handles file drops and multi-format parsing.
+- **Matrix Leaderboard**: Visualizes match scores and AI-generated reasoning.
+- **Screening Settings**: Accordion-based UI for fine-tuning the AI's priority weights.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load Inter, a custom Google Font.
+## 📂 Structure
 
-## Learn More
+- `/app`: Next.js App Router routes (Jobs, Applicants, Screening).
+- `/components/custom`: High-level business components (Leaderboard, Upload).
+- `/components/ui`: Atomic design elements (Shared with monorepo).
+- `/lib/api`: Centralized API bridge for backend communication.
 
-To learn more about Next.js, take a look at the following resources:
+## 🎨 Styling
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Tailwind CSS 4**: Modern, utility-first styling.
+- **Shadcn UI**: Premium component base.
+- **Tabler Icons**: Consistent iconography for better UX.

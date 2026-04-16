@@ -39,7 +39,7 @@ export default function JobsPage() {
         <CreateJobDialog onSuccess={fetchJobs} />
       </div>
       
-      <JobList jobs={jobs} isLoading={isLoading} />
+      <JobList jobs={jobs} isLoading={isLoading} onUpdate={fetchJobs} />
     </div>
   )
 }

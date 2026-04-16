@@ -12,6 +12,8 @@ import {
 } from '@/components/ui/sidebar'
 
 import Link from "next/link"
+import { CreateJobDialog } from "../custom/create-job-dialog"
+import { useRouter } from "next/navigation"
 
 export function NavMain({
   items,
@@ -27,13 +29,20 @@ export function NavMain({
       <SidebarGroupContent className="flex flex-col gap-2">
         <SidebarMenu>
           <SidebarMenuItem className="flex items-center gap-2">
-            <SidebarMenuButton
-              tooltip="Quick Create"
-              className="min-w-8 duration-200 ease-linear"
-            >
-              <IconCirclePlusFilled />
-              <span>Quick Create</span>
-            </SidebarMenuButton>
+            <CreateJobDialog 
+              onSuccess={() => {
+                window.location.href = "/jobs"
+              }}
+              trigger={
+                <SidebarMenuButton
+                  tooltip="Post New Job"
+                  className="min-w-8 duration-200 ease-linear"
+                >
+                  <IconCirclePlusFilled />
+                  <span>Post New Job</span>
+                </SidebarMenuButton>
+              }
+            />
             <Button
               size="icon"
               className="size-8 group-data-[collapsible=icon]:opacity-0"
