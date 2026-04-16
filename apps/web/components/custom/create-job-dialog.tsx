@@ -83,8 +83,8 @@ export function CreateJobDialog({ onSuccess, job, trigger }: CreateJobDialogProp
         status: job?.status || "open"
       }
 
-      if (job) {
-        await api.updateJob(job.id, payload as any)
+      if (job && (job.id || job._id)) {
+        await api.updateJob((job.id || job._id)!, payload as any)
         toast.success("Job updated successfully!")
       } else {
         await api.createJob(payload as any)

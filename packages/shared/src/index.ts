@@ -10,6 +10,8 @@ export interface Job {
   skills: string[];
   status?: "open" | "closed";
   location: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Applicant extends TalentProfile {
