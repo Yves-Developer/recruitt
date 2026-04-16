@@ -82,7 +82,7 @@ Explore more detailed documentation for each part of the platform:
 
 - [🎨 **Frontend Dashboard**](apps/web/README.md) - Next.js 16 (App Router) + Tailwind 4
 - [⚙️ **Backend Orchestrator**](apps/server/README.md) - Node.js + TypeScript + Mongoose
-- [📚 **API Documentation**](apps/docs/README.md) - Built with Nuxt Content
+- [📚 **Overall Documenation**](https://recruitt-docs.vercel.app) - Built with Docus
 - [📦 **Shared Library**](packages/shared/README.md) - Types and Talent Profile Specifications
 
 ---
