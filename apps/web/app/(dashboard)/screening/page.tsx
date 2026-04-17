@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge"
 import { Slider } from "@/components/ui/slider"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Leaderboard } from "@/components/custom/leaderboard"
+import { NotificationCenter } from "@/components/custom/notification-center"
 import { api } from "@/lib/api"
 import { Job, ScreeningResult } from "@repo/shared"
 
@@ -152,15 +153,20 @@ export default function ScreeningPage() {
           </p>
         </div>
         
-        {showResults && (
-          <Button 
-            variant="outline" 
-            className="w-fit gap-2 border-primary/20 hover:bg-primary/5"
-            onClick={handleReset}
-          >
-            <IconArrowLeft size={18} /> New Assessment
-          </Button>
-        )}
+        <div className="flex flex-wrap items-center gap-3">
+          {showResults && jobId && (
+            <NotificationCenter jobId={jobId} onSent={() => {}} />
+          )}
+          {showResults && (
+            <Button 
+              variant="outline" 
+              className="w-fit gap-2 border-primary/20 hover:bg-primary/5"
+              onClick={handleReset}
+            >
+              <IconArrowLeft size={18} /> New Assessment
+            </Button>
+          )}
+        </div>
       </div>
 
       {!isProcessing && !showResults && (

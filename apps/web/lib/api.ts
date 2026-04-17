@@ -111,4 +111,26 @@ export const api = {
     if (!res.ok) throw new Error('Failed to fetch dashboard stats');
     return res.json();
   },
+
+  // Notifications
+  async getStagedNotifications(jobId: string): Promise<any[]> {
+    const res = await fetch(`${API_BASE_URL}/screening/staged/${jobId}`);
+    if (!res.ok) throw new Error('Failed to fetch staged notifications');
+    return res.json();
+  },
+
+  async deleteNotification(id: string): Promise<void> {
+    const res = await fetch(`${API_BASE_URL}/screening/notification/${id}`, {
+      method: 'DELETE',
+    });
+    if (!res.ok) throw new Error('Failed to delete notification');
+  },
+
+  async sendAllStaged(jobId: string): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/screening/send-staged/${jobId}`, {
+      method: 'POST',
+    });
+    if (!res.ok) throw new Error('Failed to send staged notifications');
+    return res.json();
+  },
 };
