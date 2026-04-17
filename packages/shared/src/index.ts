@@ -31,4 +31,6 @@ export interface ScreeningResult {
   strengths: string[];
   gapsRisks: string[];
   finalRecommendation: string;
+  status?: string;
+  hasStagedNotification?: boolean;
 }

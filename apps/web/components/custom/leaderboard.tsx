@@ -9,7 +9,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Button } from "@/components/ui/button"
-import { IconSearch, IconSparkles, IconAlertTriangle, IconChecklist, IconUserCheck, IconUserX, IconDotsCircleHorizontal, IconEye } from "@tabler/icons-react"
+import { IconSearch, IconSparkles, IconAlertTriangle, IconChecklist, IconUserCheck, IconUserX, IconDotsCircleHorizontal, IconEye, IconMail } from "@tabler/icons-react"
 import { toast } from "sonner"
 import { api } from "@/lib/api"
 import { cn } from "@/lib/utils"
@@ -41,7 +41,11 @@ export function Leaderboard({ results: initialResults, jobTitle }: LeaderboardPr
   const handleStatusUpdate = async (resultId: string, newStatus: string) => {
     try {
       const updated = await api.updateScreeningStatus(resultId, newStatus);
-      setResults(prev => prev.map(r => (r._id === resultId || r.id === resultId) ? { ...r, status: newStatus } : r));
+      setResults(prev => prev.map(r => (r._id === resultId || r.id === resultId) ? { ...r, status: newStatus, hasStagedNotification: updated.hasStagedNotification } : r));
+      
+      // Notify other components (like Notification Center) that drafts may have changed
+      window.dispatchEvent(new CustomEvent("notification-staged"));
+      
       toast.success(`Candidate marked as ${newStatus}`);
     } catch (error) {
       toast.error("Failed to update status");
@@ -95,6 +99,11 @@ export function Leaderboard({ results: initialResults, jobTitle }: LeaderboardPr
                         {result.matchScore}% Match
                       </Badge>
                       {getStatusBadge(result.status)}
+                      {result.hasStagedNotification && (
+                        <Badge variant="outline" className="animate-pulse bg-primary/5 text-primary border-primary/20 gap-1 text-[10px] sm:text-xs">
+                          <IconMail size={12} /> Staged
+                        </Badge>
+                      )}
                     </div>
                   </div>
                   <p className="text-xs sm:text-sm text-muted-foreground truncate">{result.applicantId?.headline || "Unknown Candidate"}</p>

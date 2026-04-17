@@ -82,7 +82,7 @@ export default function SettingsPage() {
                     key={theme.id}
                     onClick={() => updateTheme(theme.id)}
                     className={cn(
-                      "group relative flex items-center gap-3 p-3 rounded-xl border transition-all hover:bg-muted",
+                      "group relative flex items-center gap-3 p-3 rounded-xl border transition-all hover:bg-accent",
                       activeTheme === theme.id ? "border-primary ring-2 ring-primary/20 bg-primary/5" : "border-border"
                     )}
                   >

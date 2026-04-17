@@ -2,7 +2,9 @@ import { Request, Response } from "express";
 import Job from "../models/Job.js";
 import Applicant from "../models/Applicant.js";
 import ScreeningResult from "../models/ScreeningResult.js";
+import Notification from "../models/Notification.js";
 import { screenCandidates } from "../services/geminiService.js";
+import { getShortlistTemplate, getRejectTemplate } from "../utils/templates.js";
 
 export const triggerScreening = async (req: Request, res: Response) => {
   const { jobId } = req.params;
@@ -66,7 +68,16 @@ export const getScreeningResults = async (req: Request, res: Response) => {
       .populate("applicantId")
       .sort({ rank: 1, matchScore: -1 });
 
-    res.status(200).json(results);
+    // Attach staged notification info
+    const enrichedResults = await Promise.all(results.map(async (res) => {
+      const stagedNote = await Notification.findOne({ screeningResultId: res._id, status: "staged" });
+      return {
+        ...res.toObject(),
+        hasStagedNotification: !!stagedNote
+      };
+    }));
+
+    res.status(200).json(enrichedResults);
   } catch (error: any) {
     res.status(500).json({ message: "Failed to fetch screening results", error: error.message });
   }
@@ -101,11 +112,39 @@ export const updateScreeningStatus = async (req: Request, res: Response) => {
       id,
       { status },
       { new: true }
-    );
+    ).populate("applicantId").populate("jobId");
 
     if (!result) {
       res.status(404).json({ message: "Screening result not found" });
       return;
+    }
+
+    // Always clear existing staged notifications for this specific result when status changes
+    await Notification.deleteMany({ screeningResultId: id, status: "staged" });
+
+    // Auto-draft notifications if status is Shortlisted or Rejected
+    if (status === "Shortlisted" || status === "Rejected") {
+      const applicant = result.applicantId as any;
+      const job = result.jobId as any;
+
+      const content = status === "Shortlisted" 
+        ? getShortlistTemplate(applicant.firstName, job.title)
+        : getRejectTemplate(applicant.firstName, job.title);
+
+      const subject = status === "Shortlisted"
+        ? `Status Update: You've been shortlisted for ${job.title}`
+        : `Application Update: ${job.title}`;
+
+      await Notification.create({
+        screeningResultId: id,
+        jobId: job._id,
+        recipientEmail: applicant.email,
+        recipientName: `${applicant.firstName} ${applicant.lastName}`,
+        subject,
+        content,
+        type: status === "Shortlisted" ? "shortlist" : "reject",
+        status: "staged"
+      });
     }
 
     res.status(200).json(result);
