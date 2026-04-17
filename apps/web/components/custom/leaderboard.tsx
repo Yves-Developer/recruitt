@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button"
 import { IconSearch, IconSparkles, IconAlertTriangle, IconChecklist, IconUserCheck, IconUserX, IconDotsCircleHorizontal, IconEye } from "@tabler/icons-react"
 import { toast } from "sonner"
 import { api } from "@/lib/api"
+import { cn } from "@/lib/utils"
 import * as React from "react"
 
 import { ScreeningResult } from "@repo/shared"
@@ -78,29 +79,33 @@ export function Leaderboard({ results: initialResults, jobTitle }: LeaderboardPr
       <div className="grid gap-4">
         {results.filter(r => r.applicantId).map((result, index) => (
           <div key={result._id || result.id || index} className={`group border rounded-xl overflow-hidden bg-card transition-all hover:border-primary/50 ${result.status === 'Rejected' ? 'opacity-60 grayscale-[0.5]' : ''}`}>
-            <div className="p-4 flex items-center gap-4">
-              <div className="flex flex-col items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary font-bold border border-primary/20">
-                #{index + 1}
-              </div>
-              
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h3 className="font-bold text-lg">
-                    {result.applicantId?.firstName} {result.applicantId?.lastName}
-                  </h3>
-                  <Badge className="bg-primary/20 text-primary border-primary/20">
-                    {result.matchScore}% Match
-                  </Badge>
-                  {getStatusBadge(result.status)}
+            <div className="p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <div className="flex items-center gap-4 w-full sm:w-auto">
+                <div className="flex flex-col items-center justify-center h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-primary/10 text-primary font-bold border border-primary/20 shrink-0">
+                  #{index + 1}
                 </div>
-                <p className="text-sm text-muted-foreground truncate">{result.applicantId?.headline || "Unknown Candidate"}</p>
+                
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap mb-1">
+                    <h3 className="font-bold text-base sm:text-lg truncate">
+                      {result.applicantId?.firstName} {result.applicantId?.lastName}
+                    </h3>
+                    <div className="flex gap-1.5 flex-wrap">
+                      <Badge className="bg-primary/20 text-primary border-primary/20 whitespace-nowrap text-[10px] sm:text-xs">
+                        {result.matchScore}% Match
+                      </Badge>
+                      {getStatusBadge(result.status)}
+                    </div>
+                  </div>
+                  <p className="text-xs sm:text-sm text-muted-foreground truncate">{result.applicantId?.headline || "Unknown Candidate"}</p>
+                </div>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 w-full sm:w-auto mt-2 sm:mt-0 justify-end border-t sm:border-none pt-3 sm:pt-0">
                 <Button 
                   size="sm" 
                   variant="outline"
-                  className="hover:text-primary"
+                  className="hover:text-primary h-9 w-9 sm:h-8 sm:w-8 p-0"
                   onClick={() => handleShowProfile(result.applicantId)}
                   title="View Full Profile"
                 >
@@ -109,18 +114,26 @@ export function Leaderboard({ results: initialResults, jobTitle }: LeaderboardPr
                 <Button 
                   size="sm" 
                   variant={result.status === 'Shortlisted' ? 'default' : 'outline'} 
-                  className={result.status === 'Shortlisted' ? 'bg-green-600 hover:bg-green-700' : 'hover:text-green-600'}
+                  className={cn(
+                    "flex-1 sm:flex-none h-9 sm:h-8",
+                    result.status === 'Shortlisted' ? 'bg-green-600 hover:bg-green-700' : 'hover:text-green-600'
+                  )}
                   onClick={() => handleStatusUpdate((result._id || result.id)!, "Shortlisted")}
                 >
-                  <IconUserCheck size={18} />
+                  <IconUserCheck size={18} className="sm:mr-0 mr-2" />
+                  <span className="sm:hidden text-xs">Shortlist</span>
                 </Button>
                 <Button 
                   size="sm" 
                   variant={result.status === 'Rejected' ? 'destructive' : 'outline'} 
-                  className={result.status === 'Rejected' ? '' : 'hover:text-red-600'}
+                  className={cn(
+                    "flex-1 sm:flex-none h-9 sm:h-8",
+                    result.status === 'Rejected' ? '' : 'hover:text-red-600'
+                  )}
                   onClick={() => handleStatusUpdate((result._id || result.id)!, "Rejected")}
                 >
-                  <IconUserX size={18} />
+                  <IconUserX size={18} className="sm:mr-0 mr-2" />
+                  <span className="sm:hidden text-xs">Reject</span>
                 </Button>
               </div>
             </div>

@@ -256,11 +256,11 @@ export default function ScreeningPage() {
                 </AccordionItem>
               </Accordion>
             </CardContent>
-            <CardFooter className="border-t pt-6 gap-4">
+            <CardFooter className="border-t pt-6 flex flex-col md:flex-row gap-4">
               {hasPreviousResults && (
                 <Button 
                   variant="outline"
-                  className="flex-1 gap-2 h-14"
+                  className="w-full md:flex-1 gap-2 h-14"
                   onClick={handleLoadPrevious}
                   disabled={!jobId}
                 >
@@ -268,11 +268,11 @@ export default function ScreeningPage() {
                 </Button>
               )}
               <Button 
-                className={`gap-2 text-lg h-14 shadow-lg shadow-primary/20 ${hasPreviousResults ? "flex-1" : "w-full"}`}
+                className={`gap-2 text-lg h-14 w-full ${hasPreviousResults ? "md:flex-1" : "md:w-full"}`}
                 disabled={!jobId}
                 onClick={handleStartScreening}
               >
-                <IconRocket size={20} /> {hasPreviousResults ? "Re-trigger AI Bio-Matrix" : "Initialize AI Matrix Assessment"}
+                <IconRocket size={20} /> {hasPreviousResults ? "Re-trigger Matrix" : "Initialize Matrix"}
               </Button>
             </CardFooter>
           </Card>

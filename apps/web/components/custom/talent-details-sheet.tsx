@@ -32,14 +32,14 @@ export function TalentDetailsSheet({ applicant, open, onOpenChange }: TalentDeta
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full sm:w-[540px] md:w-[650px] p-0 flex flex-col border-l bg-background shadow-2xl">
         {/* ... existing header ... */}
-        <div className="p-10 pb-6 shrink-0">
+        <div className="p-6 sm:p-10 pb-6 shrink-0">
           <SheetHeader className="text-left space-y-4">
-            <div className="flex justify-between items-start">
+            <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
               <div className="space-y-1">
-                <SheetTitle className="text-4xl font-semibold tracking-tight">
+                <SheetTitle className="text-3xl sm:text-4xl font-semibold tracking-tight">
                   {applicant.firstName} {applicant.lastName}
                 </SheetTitle>
-                <p className="text-xl text-primary/80 font-medium">
+                <p className="text-lg sm:text-xl text-primary/80 font-medium">
                   {applicant.headline}
                 </p>
               </div>
@@ -51,7 +51,7 @@ export function TalentDetailsSheet({ applicant, open, onOpenChange }: TalentDeta
             <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-muted-foreground pt-2">
               <span className="flex items-center gap-1.5"><IconMapPin size={16} /> {applicant.location}</span>
               <span className="flex items-center gap-1.5"><IconMail size={16} /> {applicant.email}</span>
-              <div className="flex items-center gap-3 ml-2 border-l pl-6">
+              <div className="flex items-center gap-3 sm:ml-2 sm:border-l sm:pl-6">
                 {applicant.socialLinks?.linkedin && <a href={applicant.socialLinks.linkedin} target="_blank" className="hover:text-primary transition-colors"><IconBrandLinkedin size={20} /></a>}
                 {applicant.socialLinks?.github && <a href={applicant.socialLinks.github} target="_blank" className="hover:text-primary transition-colors"><IconBrandGithub size={20} /></a>}
                 {applicant.socialLinks?.portfolio && <a href={applicant.socialLinks.portfolio} target="_blank" className="hover:text-primary transition-colors"><IconWorld size={20} /></a>}
@@ -63,7 +63,7 @@ export function TalentDetailsSheet({ applicant, open, onOpenChange }: TalentDeta
         <Separator />
 
         <div className="flex-1 overflow-y-auto">
-          <div className="p-10 space-y-12">
+          <div className="p-6 sm:p-10 space-y-12">
 
             {/* Summary */}
             {applicant.bio && (
