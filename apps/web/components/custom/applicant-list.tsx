@@ -18,6 +18,11 @@ interface ApplicantListProps {
 export function ApplicantList({ applicants, isLoading, onRefresh }: ApplicantListProps) {
   const [selectedApplicant, setSelectedApplicant] = React.useState<Applicant | null>(null)
   const [isDetailsOpen, setIsDetailsOpen] = React.useState(false)
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const pageSize = 6;
+  const totalPages = Math.ceil(applicants.length / pageSize);
+
+  const paginatedApplicants = applicants.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const handleViewProfile = (applicant: Applicant) => {
     setSelectedApplicant(applicant)
@@ -35,28 +40,29 @@ export function ApplicantList({ applicants, isLoading, onRefresh }: ApplicantLis
 
   return (
     <div className="space-y-6">
-      <TalentDetailsSheet 
-        applicant={selectedApplicant} 
-        open={isDetailsOpen} 
-        onOpenChange={setIsDetailsOpen} 
+      <TalentDetailsSheet
+        applicant={selectedApplicant}
+        open={isDetailsOpen}
+        onOpenChange={setIsDetailsOpen}
       />
-      
+
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Active Talent Pool</h2>
-          <p className="text-muted-foreground text-sm">
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight">Active Talent Pool</h2>
+          <p className="text-muted-foreground text-xs sm:text-sm">
             {applicants.length} candidates associated with this position.
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={onRefresh} className="gap-2">
-           <IconRefresh size={16} /> Refresh
+          <IconRefresh size={16} /> Refresh
         </Button>
       </div>
 
       <div className="grid gap-4 md:grid-cols-1 xl:grid-cols-2">
-        {applicants.map((applicant) => (
+        {paginatedApplicants.map((applicant) => (
           <Card key={applicant._id || applicant.id} className="group hover:border-primary/50 transition-all shadow-sm min-w-0">
-            <CardHeader className="pb-3">
+            {/* ... card content ... */}
+            <CardHeader className="pb-3 border-b">
               <div className="flex gap-3 min-w-0">
                 <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
                   <IconUser size={20} />
@@ -65,18 +71,18 @@ export function ApplicantList({ applicants, isLoading, onRefresh }: ApplicantLis
                   <CardTitle className="text-lg truncate font-bold" title={`${applicant.firstName} ${applicant.lastName}`}>
                     {applicant.firstName} {applicant.lastName}
                   </CardTitle>
-                  <p className="text-sm text-muted-foreground font-medium truncate" title={applicant.headline}>
+                  <p className="text-xs sm:text-sm text-muted-foreground font-medium truncate" title={applicant.headline}>
                     {applicant.headline}
                   </p>
                 </div>
               </div>
               <CardAction>
-                <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 shrink-0 whitespace-nowrap">
+                <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 shrink-0 whitespace-nowrap hidden sm:flex">
                   {applicant.availability?.status || "Active"}
                 </Badge>
               </CardAction>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="space-y-3 pt-4">
               <div className="flex flex-wrap gap-2">
                 {(applicant.skills || []).slice(0, 3).map((skill, i) => (
                   <Badge key={i} variant="outline" className="text-[10px] uppercase tracking-wider">
@@ -84,23 +90,23 @@ export function ApplicantList({ applicants, isLoading, onRefresh }: ApplicantLis
                   </Badge>
                 ))}
                 {(applicant.skills || []).length > 3 && (
-                   <span className="text-[10px] text-muted-foreground flex items-center">+{(applicant.skills || []).length - 3} more</span>
+                  <span className="text-[10px] text-muted-foreground flex items-center">+{(applicant.skills || []).length - 3} more</span>
                 )}
               </div>
-              
+
               <div className="flex items-center justify-between pt-2 border-t text-sm text-muted-foreground gap-2">
                 <div className="flex items-center gap-3 min-w-0 flex-1">
-                   <span className="flex items-center gap-1 truncate" title={applicant.location}>
-                     <IconMapPin size={14} className="shrink-0" /> {applicant.location}
-                   </span>
-                   <span className="hidden sm:flex items-center gap-1 truncate" title={applicant.email}>
-                     <IconMail size={14} className="shrink-0" /> {applicant.email.split('@')[0]}...
-                   </span>
+                  <span className="flex items-center gap-1 truncate text-xs" title={applicant.location}>
+                    <IconMapPin size={14} className="shrink-0" /> {applicant.location}
+                  </span>
+                  <span className="hidden sm:flex items-center gap-1 truncate text-xs" title={applicant.email}>
+                    <IconMail size={14} className="shrink-0" /> {applicant.email.split('@')[0]}...
+                  </span>
                 </div>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-8 px-2 group-hover:text-primary transition-colors flex items-center shrink-0"
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 px-2  flex items-center shrink-0"
                   onClick={() => handleViewProfile(applicant)}
                 >
                   <span className="hidden sm:inline mr-2">View Profile</span> <IconEye size={16} />
@@ -115,11 +121,39 @@ export function ApplicantList({ applicants, isLoading, onRefresh }: ApplicantLis
             <IconUser className="mx-auto text-muted-foreground/50 mb-4" size={48} />
             <h3 className="text-lg font-medium text-muted-foreground">No applicants yet</h3>
             <p className="text-sm text-muted-foreground/70 max-w-sm mx-auto mt-1">
-              Start by uploading resumes or manually entering candidate data using the tabs on the left.
+              Start by uploading resumes or manually entering candidate data.
             </p>
           </div>
         )}
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between pt-6 border-t font-medium">
+          <p className="text-xs text-muted-foreground">
+            Showing {paginatedApplicants.length} of {applicants.length} candidates
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="h-8 text-xs font-bold"
+            >
+              Back
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="h-8 text-xs font-bold"
+            >
+              Next
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
