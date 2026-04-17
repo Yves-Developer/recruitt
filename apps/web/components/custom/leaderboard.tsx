@@ -80,7 +80,7 @@ export function Leaderboard({ results: initialResults, jobTitle }: LeaderboardPr
         {results.filter(r => r.applicantId).map((result, index) => (
           <div key={result._id || result.id || index} className={`group border rounded-xl overflow-hidden bg-card transition-all hover:border-primary/50 ${result.status === 'Rejected' ? 'opacity-60 grayscale-[0.5]' : ''}`}>
             <div className="p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <div className="flex items-center gap-4 w-full sm:w-auto">
+              <div className="flex items-center gap-4 w-full sm:flex-1 min-w-0">
                 <div className="flex flex-col items-center justify-center h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-primary/10 text-primary font-bold border border-primary/20 shrink-0">
                   #{index + 1}
                 </div>
