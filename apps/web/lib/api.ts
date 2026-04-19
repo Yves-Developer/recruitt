@@ -119,6 +119,12 @@ export const api = {
     return res.json();
   },
 
+  async getAllStagedNotifications(): Promise<any[]> {
+    const res = await fetch(`${API_BASE_URL}/screening/staged-all`);
+    if (!res.ok) throw new Error('Failed to fetch all staged notifications');
+    return res.json();
+  },
+
   async deleteNotification(id: string): Promise<void> {
     const res = await fetch(`${API_BASE_URL}/screening/notification/${id}`, {
       method: 'DELETE',
@@ -131,6 +137,14 @@ export const api = {
       method: 'POST',
     });
     if (!res.ok) throw new Error('Failed to send staged notifications');
+    return res.json();
+  },
+
+  async sendAllGlobalStaged(): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/screening/send-staged-all`, {
+      method: 'POST',
+    });
+    if (!res.ok) throw new Error('Failed to send all staged notifications');
     return res.json();
   },
 };

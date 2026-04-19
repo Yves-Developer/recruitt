@@ -33,7 +33,7 @@ export default function JobsPage() {
         <div className="space-y-1">
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Job Openings</h1>
           <p className="text-sm sm:text-base text-muted-foreground max-w-2xl leading-relaxed">
-            Manage your active vacancies and recruitment pipelines.
+            Manage your open jobs and see how your hiring is going.
           </p>
         </div>
         <CreateJobDialog onSuccess={fetchJobs} />

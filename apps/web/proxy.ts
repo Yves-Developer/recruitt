@@ -2,7 +2,8 @@ import { auth } from "./auth"
 import { NextResponse } from "next/server"
 
 const middleware = auth((req: any) => {
-  const isPasscodeVerified = req.cookies.get("recruitt_passcode_verified")?.value === "true"
+  const disablePasscode = process.env.DISABLE_PASSCODE_SCREEN === "true"
+  const isPasscodeVerified = disablePasscode || req.cookies.get("recruitt_passcode_verified")?.value === "true"
   const isLoggedIn = !!req.auth?.user
   
   const isPasscodePage = req.nextUrl.pathname === "/passcode"
@@ -18,7 +19,7 @@ const middleware = auth((req: any) => {
     return NextResponse.redirect(url)
   }
 
-  // 2. Redirect away from passcode if already verified
+  // 2. Redirect away from passcode if already verified or disabled
   if (isPasscodeVerified && isPasscodePage) {
     return NextResponse.redirect(new URL("/", req.nextUrl))
   }

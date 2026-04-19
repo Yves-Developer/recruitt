@@ -17,7 +17,7 @@ const outfit = Outfit({
 
 export const metadata: Metadata = {
   title: "Recruitt",
-  description: "Recruitment platform",
+  description: "Making hiring simple and efficient.",
 };
 
 export default function RootLayout({

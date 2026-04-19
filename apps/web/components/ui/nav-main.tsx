@@ -14,6 +14,7 @@ import {
 import Link from "next/link"
 import { CreateJobDialog } from "../custom/create-job-dialog"
 import { useRouter } from "next/navigation"
+import { NotificationCenter } from "../custom/notification-center"
 
 export function NavMain({
   items,
@@ -43,14 +44,18 @@ export function NavMain({
                 </SidebarMenuButton>
               }
             />
-            <Button
-              size="icon"
-              className="size-8 group-data-[collapsible=icon]:opacity-0"
-              variant="outline"
-            >
-              <IconMail />
-              <span className="sr-only">Inbox</span>
-            </Button>
+            <NotificationCenter 
+              trigger={
+                <Button
+                  size="icon"
+                  className="size-8 group-data-[collapsible=icon]:opacity-0"
+                  variant="outline"
+                >
+                  <IconMail />
+                  <span className="sr-only">Inbox</span>
+                </Button>
+              }
+            />
           </SidebarMenuItem>
         </SidebarMenu>
         <SidebarMenu>

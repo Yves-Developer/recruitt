@@ -46,10 +46,10 @@ export function ApplicantUpload({ jobId, onSuccess }: ApplicantUploadProps) {
       
       if (isBulkFile) {
         const res = await api.uploadBulk(formData)
-        toast.success(`Bulk Ingestion Complete! ${res.count} talents added.`)
+        toast.success(`Done! ${res.count} applicants added.`)
       } else {
         await api.uploadResume(formData)
-        toast.success("Resume parsed successfully! Talent profile created.")
+        toast.success("Resume uploaded and read successfully.")
       }
       
       setProgress(100)
@@ -66,11 +66,11 @@ export function ApplicantUpload({ jobId, onSuccess }: ApplicantUploadProps) {
   return (
     <Card className="w-full border-dashed border-2 bg-card/50">
       <CardHeader>
-        <CardTitle>{isBulkFile ? "AI Bulk Data Ingestion" : "AI Ingestion Engine"}</CardTitle>
+        <CardTitle>{isBulkFile ? "Add multiple applicants" : "Upload resume"}</CardTitle>
         <CardDescription>
           {isBulkFile 
-            ? "Upload a spreadsheet (CSV/XLSX). Our AI will map columns to the Talent Profile Schema."
-            : "Upload PDF resumes or spreadsheets. Our AI automatically extracts experience and skills."
+            ? "Upload a spreadsheet (CSV/XLSX). We'll automatically add each person to your list."
+            : "Upload PDF resumes or spreadsheets. We'll automatically find the details for you."
           }
         </CardDescription>
       </CardHeader>
@@ -113,13 +113,13 @@ export function ApplicantUpload({ jobId, onSuccess }: ApplicantUploadProps) {
             {isUploading && (
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span>{status === "uploading" ? "Uploading..." : (isBulkFile ? "AI Multi-Row Analysis..." : "AI Parsing Experience...")}</span>
+                  <span>{status === "uploading" ? "Uploading..." : (isBulkFile ? "Reading rows..." : "Reading experience...")}</span>
                   <span>{progress}%</span>
                 </div>
                 <Progress value={progress} className="h-2" />
                 {status === "parsing" && (
                   <p className="text-center text-xs text-muted-foreground animate-pulse mt-2">
-                    Gemini FLASH is mapping the data structure...
+                    Finding the right information...
                   </p>
                 )}
               </div>
@@ -128,7 +128,7 @@ export function ApplicantUpload({ jobId, onSuccess }: ApplicantUploadProps) {
             {!isUploading && status !== "complete" && (
               <div className="flex gap-2 justify-end">
                 <Button variant="ghost" onClick={() => setFile(null)}>Cancel</Button>
-                <Button onClick={startUpload}>Start {isBulkFile ? "Bulk Ingestion" : "AI Ingestion"}</Button>
+                <Button onClick={startUpload}>Start {isBulkFile ? "adding applicants" : "reading resume"}</Button>
               </div>
             )}
 
