@@ -2,11 +2,13 @@
 
 import * as React from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { IconLock, IconArrowRight, IconSparkles } from "@tabler/icons-react"
+import { Lock, ArrowRight, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "sonner"
 import Image from "next/image"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 function PasscodeContent() {
   const [passcode, setPasscode] = React.useState("")
@@ -41,67 +43,65 @@ function PasscodeContent() {
   }
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-[#050505] text-white p-6 font-sans overflow-hidden">
-      {/* Decorative Glows */}
-      <div className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-[#a8fc1e]/10 blur-[130px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-[-10%] left-[-10%] w-[60%] h-[60%] bg-[#a8fc1e]/5 blur-[130px] rounded-full pointer-events-none" />
-
-      <div className="relative z-10 w-full max-w-[440px] animate-in fade-in zoom-in-95 duration-700">
-        <div className="flex flex-col items-center text-center space-y-8">
-          {/* Logo */}
-          <div className="mb-4">
-             <Image 
-                src="/RecruittLogoIcon.svg" 
-                alt="Recruitt" 
-                width={80} 
-                height={80} 
-                className="drop-shadow-[0_0_15px_rgba(168,252,30,0.3)]"
-             />
-          </div>
-
-          <div className="space-y-3">
-            <h1 className="text-4xl font-bold tracking-tight bg-clip-text text-transparent bg-linear-to-b from-white to-white/60">
-              Private Access
-            </h1>
-            <p className="text-muted-foreground text-lg italic">
-              Recruitt is currently in private pre-launch. Please enter your invitation passcode to continue.
-            </p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="w-full space-y-4">
-            <div className="relative group">
-              <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-muted-foreground group-focus-within:text-primary transition-colors">
-                <IconLock size={20} />
+    <div className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10 relative">
+      <div className="absolute top-4 right-4 z-50">
+        <ThemeToggle />
+      </div>
+      <div className="w-full max-w-md">
+        <Card className="shadow-lg">
+          <CardHeader className="text-center space-y-6">
+            <div className="flex justify-center">
+              <div className="size-12 rounded-xl bg-primary/10 p-2.5">
+                <Image 
+                  src="/RecruittLogoIcon.svg" 
+                  alt="Recruitt" 
+                  width={48} 
+                  height={48} 
+                  className="w-full h-auto"
+                />
               </div>
-              <Input
-                type="password"
-                placeholder="Enter access code"
-                value={passcode}
-                onChange={(e) => setPasscode(e.target.value)}
-                className="h-16 pl-12 text-xl bg-white/5 border-white/10 focus:border-primary/50 focus:ring-primary/20 rounded-2xl transition-all placeholder:text-white/20"
-                autoFocus
-                required
-              />
             </div>
+            <div className="space-y-2">
+              <CardTitle className="text-2xl font-bold tracking-tight">Private Access</CardTitle>
+              <CardDescription className="text-balance">
+                Recruitt is currently in private testing. Please enter your invite code to join.
+              </CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="relative">
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="password"
+                  placeholder="Enter access code"
+                  value={passcode}
+                  onChange={(e) => setPasscode(e.target.value)}
+                  className="pl-9"
+                  autoFocus
+                  required
+                />
+              </div>
 
-            <Button 
-              type="submit" 
-              className="w-full h-16 text-lg font-bold rounded-2xl bg-[#a8fc1e] text-black hover:bg-[#b9ff45] active:scale-[0.98] transition-all gap-2"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Verifying..." : "Enter Platform"}
-              {!isSubmitting && <IconArrowRight size={20} />}
-            </Button>
-          </form>
-
-          <div className="flex items-center gap-2 text-xs text-white/30 uppercase tracking-[0.2em]">
-            <IconSparkles size={14} className="text-primary" />
-            Vesting the future of talent
-          </div>
+              <Button 
+                type="submit" 
+                className="w-full font-semibold gap-2"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Verifying..." : "Enter Platform"}
+                {!isSubmitting && <ArrowRight className="h-4 w-4" />}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+        
+        <div className="mt-8 flex items-center justify-center gap-2 text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
+          <Sparkles className="h-3 w-3 text-primary" />
+          The future of hiring
         </div>
       </div>
 
-      <footer className="absolute bottom-8 left-0 right-0 text-center text-white/20 text-sm">
+      <footer className="absolute bottom-8 text-center text-muted-foreground/40 text-xs">
         &copy; 2026 Recruitt Technologies. All rights reserved.
       </footer>
     </div>
@@ -110,7 +110,7 @@ function PasscodeContent() {
 
 export default function PasscodePage() {
   return (
-    <React.Suspense fallback={<div className="min-h-screen bg-[#050505]" />}>
+    <React.Suspense fallback={<div className="min-h-screen bg-muted" />}>
       <PasscodeContent />
     </React.Suspense>
   )

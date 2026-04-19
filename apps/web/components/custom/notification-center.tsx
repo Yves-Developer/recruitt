@@ -26,20 +26,23 @@ import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 
 interface NotificationCenterProps {
-  jobId: string;
+  jobId?: string;
   onSent?: () => void;
+  variant?: "button" | "icon";
+  trigger?: React.ReactNode;
 }
 
-export function NotificationCenter({ jobId, onSent }: NotificationCenterProps) {
+export function NotificationCenter({ jobId, onSent, variant, trigger }: NotificationCenterProps) {
   const [notifications, setNotifications] = React.useState<any[]>([])
   const [isLoading, setIsLoading] = React.useState(false)
   const [isSending, setIsSending] = React.useState(false)
 
   const fetchNotifications = React.useCallback(async () => {
-    if (!jobId) return
     setIsLoading(true)
     try {
-      const data = await api.getStagedNotifications(jobId)
+      const data = jobId 
+        ? await api.getStagedNotifications(jobId)
+        : await api.getAllStagedNotifications()
       setNotifications(data)
     } catch (error) {
       console.error(error)
@@ -71,7 +74,10 @@ export function NotificationCenter({ jobId, onSent }: NotificationCenterProps) {
     if (notifications.length === 0) return
     setIsSending(true)
     try {
-      const result = await api.sendAllStaged(jobId)
+      const result = jobId 
+        ? await api.sendAllStaged(jobId)
+        : await api.sendAllGlobalStaged()
+        
       toast.success(`Success! ${result.sent} emails delivered.`)
       setNotifications([])
       if (onSent) onSent()
@@ -85,15 +91,35 @@ export function NotificationCenter({ jobId, onSent }: NotificationCenterProps) {
   return (
     <Sheet onOpenChange={(open) => open && fetchNotifications()}>
       <SheetTrigger asChild>
-        <Button variant="outline" className="relative gap-2 border-primary/20 hover:bg-primary/5">
-          <IconBell size={18} className="text-primary" />
-          <span className="hidden sm:inline">Notification Queue</span>
-          {notifications.length > 0 && (
-            <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground shadow-sm">
-              {notifications.length}
-            </span>
-          )}
-        </Button>
+        {trigger ? (
+          <div className="relative cursor-pointer">
+            {trigger}
+            {notifications.length > 0 && (
+              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground shadow-sm">
+                {notifications.length}
+              </span>
+            )}
+          </div>
+        ) : variant === "icon" ? (
+          <Button variant="ghost" size="icon" className="relative">
+            <IconMail size={22} className="text-muted-foreground hover:text-primary transition-colors" />
+            {notifications.length > 0 && (
+              <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground shadow-sm">
+                {notifications.length}
+              </span>
+            )}
+          </Button>
+        ) : (
+          <Button variant="outline" className="relative gap-2 border-primary/20 hover:bg-primary/5">
+            <IconBell size={18} className="text-primary" />
+            <span className="hidden sm:inline">Notification Queue</span>
+            {notifications.length > 0 && (
+              <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground shadow-sm">
+                {notifications.length}
+              </span>
+            )}
+          </Button>
+        )}
       </SheetTrigger>
       <SheetContent className="w-full sm:w-[450px] flex flex-col p-0">
         <SheetHeader className="p-6 border-b">

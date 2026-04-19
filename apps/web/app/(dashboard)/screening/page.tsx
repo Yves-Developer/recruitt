@@ -41,11 +41,11 @@ export default function ScreeningPage() {
   })
 
   const steps = [
-    "Fetching applicant profiles...",
-    "Embedding semantic vectors...",
-    "Running Gemini LLM Analysis...",
-    "Calculating match scores...",
-    "Finalizing leaderboard rankings..."
+    "Getting applicant details...",
+    "Analyzing skills...",
+    "Comparing to job requirements...",
+    "Finding best matches...",
+    "Preparing the list..."
   ]
 
   React.useEffect(() => {
@@ -124,7 +124,7 @@ export default function ScreeningPage() {
         setIsProcessing(false)
         setShowResults(true)
         setHasPreviousResults(true)
-        toast.success("AI Matrix Assessment complete!")
+        toast.success("Review complete!")
       }, 500)
     } catch (error: any) {
       clearInterval(interval)
@@ -144,11 +144,11 @@ export default function ScreeningPage() {
     <div className="flex flex-col gap-6 p-4 md:p-6 lg:p-8 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">AI Screening Matrix</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Review Applicants</h1>
           <p className="text-muted-foreground mt-1">
             {showResults 
-              ? `Reviewing Top Matches for Selected Position`
-              : `Orchestrate the automated evaluation of applicants against your job criteria.`
+              ? `Showing the best matches for this position`
+              : `Compare applicants to see who matches your job best.`
             }
           </p>
         </div>
@@ -178,7 +178,7 @@ export default function ScreeningPage() {
                   <IconSparkles size={12} className="mr-1" /> Powered by Gemini 2.5 Flash-Lite
                 </Badge>
               </div>
-              <CardTitle>Initialize Evaluation</CardTitle>
+              <CardTitle>Start Review</CardTitle>
               <CardDescription>
                 Select an active job opening and define your priority weights.
               </CardDescription>
@@ -204,7 +204,7 @@ export default function ScreeningPage() {
                 <AccordionItem value="weights" className="border-none">
                   <AccordionTrigger className="hover:no-underline">
                     <span className="flex items-center gap-2 text-sm font-semibold">
-                      <IconCommand size={16} /> Matrix Weighting Preferences
+                      <IconCommand size={16} /> What matters most?
                     </span>
                   </AccordionTrigger>
                   <AccordionContent className="space-y-6 pt-2 pb-6">
@@ -254,9 +254,9 @@ export default function ScreeningPage() {
                         />
                       </div>
                     </div>
-                    <div className="p-3 bg-primary/5 rounded border border-primary/10 text-xs text-muted-foreground flex gap-2">
+                     <div className="p-3 bg-primary/5 rounded border border-primary/10 text-xs text-muted-foreground flex gap-2">
                        <IconBrain size={16} className="text-primary shrink-0" />
-                       Gemini will prioritize candidates who excel in the highest-weighted areas during match analysis.
+                       We'll prioritize candidates who excel in the areas you rank highest.
                     </div>
                   </AccordionContent>
                 </AccordionItem>
@@ -278,7 +278,7 @@ export default function ScreeningPage() {
                 disabled={!jobId}
                 onClick={handleStartScreening}
               >
-                <IconRocket size={20} /> {hasPreviousResults ? "Re-trigger Matrix" : "Initialize Matrix"}
+                 <IconRocket size={20} /> {hasPreviousResults ? "Refresh results" : "Start review"}
               </Button>
             </CardFooter>
           </Card>
@@ -290,21 +290,21 @@ export default function ScreeningPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 text-sm leading-relaxed">
-              <p>
-                Our AI engine performs a **multi-dimensional match analysis** between candidate profiles and your job requirements.
+               <p>
+                Our system performs a **comprehensive review** between candidate profiles and your job requirements.
               </p>
               <ul className="space-y-3 list-none text-muted-foreground">
                 <li className="flex items-start gap-2 italic">
-                  <span className="text-primary font-bold">01.</span> Semantic skill gap analysis
+                  <span className="text-primary font-bold">01.</span> Skills match
                 </li>
                 <li className="flex items-start gap-2 italic">
-                  <span className="text-primary font-bold">02.</span> Experience weight correlation
+                  <span className="text-primary font-bold">02.</span> Experience match
                 </li>
                 <li className="flex items-start gap-2 italic">
-                  <span className="text-primary font-bold">03.</span> Project relevance scoring
+                  <span className="text-primary font-bold">03.</span> Project match
                 </li>
                 <li className="flex items-start gap-2 italic">
-                  <span className="text-primary font-bold">04.</span> Cultural alignment prediction
+                  <span className="text-primary font-bold">04.</span> Team fit prediction
                 </li>
               </ul>
             </CardContent>

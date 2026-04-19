@@ -42,10 +42,10 @@ export function Leaderboard({ results: initialResults, jobTitle }: LeaderboardPr
     try {
       const updated = await api.updateScreeningStatus(resultId, newStatus);
       setResults(prev => prev.map(r => (r._id === resultId || r.id === resultId) ? { ...r, status: newStatus, hasStagedNotification: updated.hasStagedNotification } : r));
-      
+
       // Notify other components (like Notification Center) that drafts may have changed
       window.dispatchEvent(new CustomEvent("notification-staged"));
-      
+
       toast.success(`Candidate marked as ${newStatus}`);
     } catch (error) {
       toast.error("Failed to update status");
@@ -55,11 +55,11 @@ export function Leaderboard({ results: initialResults, jobTitle }: LeaderboardPr
   const getStatusBadge = (status?: string) => {
     switch (status) {
       case "Shortlisted":
-        return <Badge className="bg-green-500/20 text-green-500 border-green-500/20 gap-1"><IconUserCheck size={12}/> Shortlisted</Badge>;
+        return <Badge className="bg-green-500/20 text-green-500 border-green-500/20 gap-1"><IconUserCheck size={12} /> Shortlisted</Badge>;
       case "Rejected":
-        return <Badge variant="destructive" className="gap-1"><IconUserX size={12}/> Rejected</Badge>;
+        return <Badge className="bg-red-500/20 text-red-500 border-red-500/20 gap-1"><IconUserX size={12} /> Rejected</Badge>;
       case "Review later":
-        return <Badge variant="outline" className="text-amber-500 border-amber-500/20 gap-1"><IconDotsCircleHorizontal size={12}/> Reviewing</Badge>;
+        return <Badge variant="outline" className="text-amber-500 border-amber-500/20 gap-1"><IconDotsCircleHorizontal size={12} /> Reviewing</Badge>;
       default:
         return <Badge variant="secondary">Evaluated</Badge>;
     }
@@ -67,10 +67,10 @@ export function Leaderboard({ results: initialResults, jobTitle }: LeaderboardPr
 
   return (
     <div className="space-y-4">
-      <TalentDetailsSheet 
-        applicant={selectedApplicant} 
-        open={isDetailsOpen} 
-        onOpenChange={setIsDetailsOpen} 
+      <TalentDetailsSheet
+        applicant={selectedApplicant}
+        open={isDetailsOpen}
+        onOpenChange={setIsDetailsOpen}
       />
 
       <div className="flex items-center justify-between mb-2">
@@ -88,7 +88,7 @@ export function Leaderboard({ results: initialResults, jobTitle }: LeaderboardPr
                 <div className="flex flex-col items-center justify-center h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-primary/10 text-primary font-bold border border-primary/20 shrink-0">
                   #{index + 1}
                 </div>
-                
+
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap mb-1">
                     <h3 className="font-bold text-base sm:text-lg truncate">
@@ -111,8 +111,8 @@ export function Leaderboard({ results: initialResults, jobTitle }: LeaderboardPr
               </div>
 
               <div className="flex gap-2 w-full sm:w-auto mt-2 sm:mt-0 justify-end border-t sm:border-none pt-3 sm:pt-0">
-                <Button 
-                  size="sm" 
+                <Button
+                  size="sm"
                   variant="outline"
                   className="hover:text-primary h-9 w-9 sm:h-8 sm:w-8 p-0"
                   onClick={() => handleShowProfile(result.applicantId)}
@@ -120,9 +120,9 @@ export function Leaderboard({ results: initialResults, jobTitle }: LeaderboardPr
                 >
                   <IconEye size={18} />
                 </Button>
-                <Button 
-                  size="sm" 
-                  variant={result.status === 'Shortlisted' ? 'default' : 'outline'} 
+                <Button
+                  size="sm"
+                  variant={result.status === 'Shortlisted' ? 'default' : 'outline'}
                   className={cn(
                     "flex-1 sm:flex-none h-9 sm:h-8",
                     result.status === 'Shortlisted' ? 'bg-green-600 hover:bg-green-700' : 'hover:text-green-600'
@@ -132,12 +132,12 @@ export function Leaderboard({ results: initialResults, jobTitle }: LeaderboardPr
                   <IconUserCheck size={18} className="sm:mr-0 mr-2" />
                   <span className="sm:hidden text-xs">Shortlist</span>
                 </Button>
-                <Button 
-                  size="sm" 
-                  variant={result.status === 'Rejected' ? 'destructive' : 'outline'} 
+                <Button
+                  size="sm"
+                  variant={result.status === 'Rejected' ? 'default' : 'outline'}
                   className={cn(
                     "flex-1 sm:flex-none h-9 sm:h-8",
-                    result.status === 'Rejected' ? '' : 'hover:text-red-600'
+                    result.status === 'Rejected' ? 'bg-red-500 hover:bg-red-600 text-white' : 'hover:text-red-500'
                   )}
                   onClick={() => handleStatusUpdate((result._id || result.id)!, "Rejected")}
                 >
