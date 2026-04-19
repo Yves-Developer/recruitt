@@ -12,7 +12,7 @@ const getResend = () => {
 
 export const sendEmail = async (to: string, subject: string, html: string) => {
   const resend = getResend();
-  
+
   if (!resend) {
     console.error("❌ Cannot send email: Resend is not configured.");
     return { success: false, error: "Email provider not configured" };
@@ -20,7 +20,7 @@ export const sendEmail = async (to: string, subject: string, html: string) => {
 
   try {
     const data = await resend.emails.send({
-      from: 'Recruitt <onboarding@resend.dev>', // Use onboarding@resend.dev for testing without a domain
+      from: process.env.EMAIL_FROM || 'Recruitt <notifications@recruitt.yvesdc.site>',
       to,
       subject,
       html,
