@@ -1,8 +1,8 @@
-# 🚀 Recruitt - AI Talent Screening Platform
+#  Recruitt - AI Talent Screening Platform
 
 Recruitt is a powerful, high-performance talent acquisition engine designed to optimize the intelligence matrix for modern recruiters. It leverages **Gemini 2.5 Flash** for deep semantic analysis of resumes and job requirements.
 
-## 🛠️ Local Development
+##  Local Development
 
 To get the full Recruitt engine running on your machine, follow these steps:
 
@@ -37,9 +37,9 @@ pnpm dev
 
 ---
 
-## 🏗️ Technical Architecture
+##  Technical Architecture
 
-### 🗺️ Recruiter User Flow
+###  Recruiter User Flow
 The frontend is designed for high-velocity decision making, focusing on clarity and AI explainability.
 
 ```mermaid
@@ -59,7 +59,7 @@ journey
       Shortlist Candidates: 5: Recruiter
 ```
 
-### 🧠 AI Decision Pipeline
+###  AI Decision Pipeline
 The backend orchestrates semantic comparisons between talent profiles and job specifications using a weighted matrix approach.
 
 ```mermaid
@@ -76,7 +76,7 @@ graph TD
 
 ---
 
-## 📂 Sub-Project Documentation
+##  Sub-Project Documentation
 
 Explore more detailed documentation for each part of the platform:
 
