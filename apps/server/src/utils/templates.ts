@@ -1,3 +1,10 @@
+/**
+ * Generates an HTML email template for shortlisted candidates.
+ * 
+ * @param {string} name - The first name of the applicant.
+ * @param {string} jobTitle - The title of the job they applied for.
+ * @returns {string} The complete HTML email content.
+ */
 export const getShortlistTemplate = (name: string, jobTitle: string) => `
 <!DOCTYPE html>
 <html>
@@ -31,6 +38,13 @@ export const getShortlistTemplate = (name: string, jobTitle: string) => `
 </html>
 `;
 
+/**
+ * Generates an HTML email template for rejected candidates.
+ * 
+ * @param {string} name - The first name of the applicant.
+ * @param {string} jobTitle - The title of the job they applied for.
+ * @returns {string} The complete HTML email content.
+ */
 export const getRejectTemplate = (name: string, jobTitle: string) => `
 <!DOCTYPE html>
 <html>

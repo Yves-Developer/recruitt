@@ -27,6 +27,13 @@ journey
       Shortlist Candidates: 5: Recruiter
 ```
 
+## 🧪 How to Test
+
+To see the platform in action without manually entering data:
+1. **Create a Job**: Go to the Dashboard and create a new job posting.
+2. **Bulk Upload Applicants**: Use the `dummy_applicants.csv` found in `apps/server/dummy_applicants.csv`.
+3. **Run Screening**: Click "Screen Candidates" and adjust the weights to see how the AI re-ranks the talent.
+
 ## 🛠️ Components
 
 - **AI Ingestion Engine**: Handles file drops and multi-format parsing.

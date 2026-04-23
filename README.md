@@ -1,5 +1,7 @@
 #  Recruitt - AI Talent Screening Platform
 
+![Recruitt Banner](./apps/web/public/image.png)
+
 Recruitt is a powerful, high-performance talent acquisition engine designed to optimize the intelligence matrix for modern recruiters. It leverages **Gemini 2.5 Flash** for deep semantic analysis of resumes and job requirements.
 
 ##  Local Development

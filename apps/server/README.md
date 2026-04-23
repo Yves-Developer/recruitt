@@ -1,11 +1,11 @@
 # 🚀 Recruitt Backend - Node.js + TypeScript
 
-This is the core orchestration layer for the Recruitt platform. it handles data ingestion, AI evaluation logic, and result persistence.
+This is the core orchestration layer for the Recruitt platform. It handles data ingestion, AI evaluation logic, and result persistence.
 
 ## 🏗️ Core Architecture
 
 The backend follows a Controller-Service pattern:
-- **Controllers**: Handle HTTP requests and input validation (Zod).
+- **Controllers**: Handle HTTP requests and input validation (Zod). All controllers are documented with **JSDoc**.
 - **Services**: Contain business logic and AI integration (Gemini).
 - **Models**: Mongoose schemas enforcing the Talent Profile Specification.
 
@@ -31,6 +31,12 @@ graph TD
 - `/services`: Gemini AI integrations and Resume/CSV parsing logic.
 - `/models`: Shared data structures matching `db-schema.txt`.
 - `/scripts`: Database seeding and testing utilities.
+
+## 🧪 Testing & Dummy Data
+
+To test the bulk upload feature, you can find a sample CSV file in this directory:
+- **Location**: `apps/server/dummy_applicants.csv`
+- **Usage**: Upload this file in the `Add multiple applicants` section of the web dashboard.
 
 ## 🛠️ Setup
 

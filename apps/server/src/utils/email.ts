@@ -1,6 +1,9 @@
 import { Resend } from 'resend';
 
-// Helper to safely get the Resend instance
+/**
+ * Helper to safely get the Resend instance using the API key from environment variables.
+ * @returns {Resend | null} The Resend instance or null if the API key is missing.
+ */
 const getResend = () => {
   const key = process.env.RESEND_API_KEY;
   if (!key) {
@@ -10,6 +13,14 @@ const getResend = () => {
   return new Resend(key);
 };
 
+/**
+ * Sends an email using the Resend service.
+ * 
+ * @param {string} to - Recipient email address.
+ * @param {string} subject - Email subject line.
+ * @param {string} html - HTML content of the email.
+ * @returns {Promise<{success: boolean, data?: any, error?: any}>} Result of the email sending operation.
+ */
 export const sendEmail = async (to: string, subject: string, html: string) => {
   const resend = getResend();
 
