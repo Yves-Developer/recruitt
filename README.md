@@ -28,6 +28,7 @@ PORT=5000
 MONGODB_URI=your_mongodb_connection_string
 GEMINI_API_KEY=your_gemini_api_key
 RESEND_API_KEY=your_resend_api_key
+EMAIL_FROM="Recruitt <notifications@yourdomain.com>"
 ```
 
 Create an `.env.local` file in `apps/web/.env.local`:
