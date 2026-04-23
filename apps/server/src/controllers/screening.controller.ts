@@ -6,6 +6,15 @@ import Notification from "../models/Notification.js";
 import { screenCandidates } from "../services/geminiService.js";
 import { getShortlistTemplate, getRejectTemplate } from "../utils/templates.js";
 
+/**
+ * Triggers the AI screening process for a specific job.
+ * Fetches all applicants for the job, runs them through Gemini AI with weighted criteria,
+ * and persists the results to the database.
+ * 
+ * @param {Request} req - Express request object containing jobId in params and weights in body.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>}
+ */
 export const triggerScreening = async (req: Request, res: Response) => {
   const { jobId } = req.params;
   const { weights } = req.body;
@@ -60,6 +69,14 @@ export const triggerScreening = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Retrieves all screening results for a specific job.
+ * Results include populated applicant details and a flag for staged notifications.
+ * 
+ * @param {Request} req - Express request object containing jobId in params.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>}
+ */
 export const getScreeningResults = async (req: Request, res: Response) => {
   const { jobId } = req.params;
   try {
@@ -83,6 +100,14 @@ export const getScreeningResults = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Retrieves the 10 most recent screening results across all jobs.
+ * Used for the global dashboard view.
+ * 
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>}
+ */
 export const getAllRecentScreenings = async (req: Request, res: Response) => {
   try {
     const results = await ScreeningResult.find()
@@ -97,6 +122,14 @@ export const getAllRecentScreenings = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Updates the status of a screening result (e.g., Shortlisted, Rejected).
+ * Automatically generates a staged email notification if the status is Shortlisted or Rejected.
+ * 
+ * @param {Request} req - Express request object containing result ID in params and new status in body.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>}
+ */
 export const updateScreeningStatus = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { status } = req.body;

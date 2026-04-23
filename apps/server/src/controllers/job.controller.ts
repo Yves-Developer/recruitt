@@ -10,6 +10,14 @@ const createJobSchema = z.object({
   skills: z.array(z.string()).min(1, "At least one skill is required"),
 });
 
+/**
+ * Creates a new job posting.
+ * Validates the input data against createJobSchema.
+ * 
+ * @param {Request} req - Express request object containing job details in body.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>}
+ */
 export const createJob = async (req: Request, res: Response) => {
   try {
     const validatedData = createJobSchema.parse(req.body);
@@ -25,6 +33,13 @@ export const createJob = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Retrieves all job postings, sorted by creation date (newest first).
+ * 
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>}
+ */
 export const getJobs = async (req: Request, res: Response) => {
   try {
     const jobs = await Job.find().sort({ createdAt: -1 });
@@ -34,6 +49,13 @@ export const getJobs = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Retrieves a single job posting by its ID.
+ * 
+ * @param {Request} req - Express request object containing job ID in params.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>}
+ */
 export const getJobById = async (req: Request, res: Response) => {
   try {
     const job = await Job.findById(req.params.id);
@@ -47,6 +69,13 @@ export const getJobById = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Updates an existing job posting by its ID.
+ * 
+ * @param {Request} req - Express request object containing job ID in params and update data in body.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>}
+ */
 export const updateJob = async (req: Request, res: Response) => {
   try {
     const job = await Job.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -60,6 +89,13 @@ export const updateJob = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Deletes a job posting by its ID.
+ * 
+ * @param {Request} req - Express request object containing job ID in params.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>}
+ */
 export const deleteJob = async (req: Request, res: Response) => {
   try {
     const job = await Job.findByIdAndDelete(req.params.id);

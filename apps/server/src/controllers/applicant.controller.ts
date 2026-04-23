@@ -78,6 +78,14 @@ const applicantSchema = z.object({
 
 const ingestSchema = z.union([applicantSchema, z.array(applicantSchema)]);
 
+/**
+ * Ingests a structured applicant or an array of applicants directly into the database.
+ * Validates the input against the applicantSchema.
+ * 
+ * @param {Request} req - Express request object containing applicant data in body.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>}
+ */
 export const ingestStructuredApplicant = async (req: Request, res: Response) => {
   try {
     const validatedData = ingestSchema.parse(req.body);
@@ -98,6 +106,14 @@ export const ingestStructuredApplicant = async (req: Request, res: Response) => 
   }
 };
 
+/**
+ * Retrieves all applicants associated with a specific job ID.
+ * Results are sorted by creation date in descending order.
+ * 
+ * @param {Request} req - Express request object containing jobId in params.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>}
+ */
 export const getApplicantsByJob = async (req: Request, res: Response) => {
   const { jobId } = req.params;
   try {
@@ -108,6 +124,14 @@ export const getApplicantsByJob = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Processes a single unstructured resume (PDF) for a specific job.
+ * Uses Gemini AI to extract structured data from the PDF text.
+ * 
+ * @param {Request} req - Express request object with jobId in body and file in req.file.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>}
+ */
 export const uploadUnstructuredApplicant = async (req: Request, res: Response) => {
   const { jobId } = req.body;
   if (!jobId || !req.file) {
@@ -151,6 +175,14 @@ export const uploadUnstructuredApplicant = async (req: Request, res: Response) =
   }
 };
 
+/**
+ * Handles bulk upload of applicants via CSV or XLSX files.
+ * Reads the file buffer, converts to CSV string, and uses Gemini AI to map rows to the schema.
+ * 
+ * @param {Request} req - Express request object with jobId in body and spreadsheet in req.file.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>}
+ */
 export const uploadBulkApplicants = async (req: Request, res: Response) => {
   const { jobId } = req.body;
   if (!jobId || !req.file) {
