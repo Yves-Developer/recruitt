@@ -21,11 +21,21 @@ pnpm install
 ```
 
 ### 3. Environment Configuration
+
 Create an `.env` file in `apps/server/.env`:
 ```env
 PORT=5000
 MONGODB_URI=your_mongodb_connection_string
 GEMINI_API_KEY=your_gemini_api_key
+RESEND_API_KEY=your_resend_api_key
+```
+
+Create an `.env.local` file in `apps/web/.env.local`:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+AUTH_SECRET=your_next_auth_secret
+PRELAUNCH_PASSCODE=your_preferred_passcode
+DISABLE_PASSCODE_SCREEN=false
 ```
 
 ### 4. Running the Platform
